@@ -1,0 +1,7 @@
+#!/home/cjhosu/repos/mud_game/evenv/bin/python
+# EASY-INSTALL-DEV-SCRIPT: 'evennia==0.9.0','evennia'
+__requires__ = 'evennia==0.9.0'
+__import__('pkg_resources').require('evennia==0.9.0')
+__file__ = '/home/cjhosu/repos/mud_game/evennia/bin/unix/evennia'
+with open(__file__) as f:
+    exec(compile(f.read(), __file__, 'exec'))
