@@ -10,8 +10,7 @@ creation commands.
 from evennia import DefaultCharacter
 
 
-class Character(DefaultCharacter):
-    """
+"""
     The Character defaults to reimplementing some of base Object's hook methods with the
     following functionality:
 
@@ -30,4 +29,13 @@ class Character(DefaultCharacter):
     at_post_puppet - Echoes "AccountName has entered the game" to the room.
 
     """
+
+class Character(DefaultCharacter):
+    def at_object_creation(self):
+        "This is called when the object is first created only."
+        self.db.strength = 100
+        self.db.magic = 100
+        self.db.dex = 100
+        self.db.intel = 100
+        self.db.luck = 100
     pass

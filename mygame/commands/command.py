@@ -36,7 +36,7 @@ class Command(BaseCommand):
 
 # -------------------------------------------------------------
 #
-# The default commands inherit from
+#  The default commands inherit from
 #
 #   evennia.commands.default.muxcommand.MuxCommand.
 #
@@ -186,3 +186,65 @@ class Command(BaseCommand):
 #                 self.character = self.caller.get_puppet(self.session)
 #             else:
 #                 self.character = None
+
+
+
+class CmdSetPower(Command):
+    """
+    set the power of a character
+    Usage: +setpower <1-10>
+    This sets the power of the current character and can only be used 
+    at creation
+    """
+
+    key = "+setpower"
+    help_category = "mush"
+
+    def func(self):
+        "This performs the actual command"
+        errmsg = "You must supply a number between 1 and 10"
+        if not self.args:
+            self.caller.msg(errmsg)
+            return
+        try:
+            power = int(self.args)
+        except ValueErorr:
+            self.caller.msg(errmsg)
+        if not (1 <= power <=10):
+            self.caller.msg(errmsg)
+            return
+        #at this point the argument is tested and valid so let's see it.
+        self.caller.db.power = power
+        self.caller.msg("your Power was set to %i."% power);
+
+
+class CmdSetCharClass(Command):
+    key = "become "
+    def func(self):
+        "This is the class choice function"
+        errmsg = "You must pick a valid class (Ranger, Warrior)"
+        if not self.args:
+            self.caller.msg(errmsg)
+            return
+        charclass = str(self.args)
+        self.caller.msg(charclass)
+        if charclass == 'Ranger':
+            self.caller.db.strength *= .70
+            self.caller.db.magic *= .70
+            self.caller.db.dex *= 1.30
+            self.caller.db.intel *= 1.2
+            self.caller.db.luck *= 1.1
+            self.caller.msg("Always good to have a Ranger on hand!")
+
+        elif charclass == 'Warrior':
+            self.caller.db.strength *= 1.80
+            self.caller.db.magic *= .45
+            self.caller.db.dex *= 1.05
+            self.caller.db.intel *= .60
+            self.caller.db.luck *= 1.1
+            self.caller.msg("I should have been able to tell by the muscles!")
+
+
+
+
+

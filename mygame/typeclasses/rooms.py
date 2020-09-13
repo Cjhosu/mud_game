@@ -6,7 +6,7 @@ Rooms are simple containers that has no location of their own.
 """
 
 from evennia import DefaultRoom
-
+from commands.default_cmdsets import ChargenCmdset
 
 class Room(DefaultRoom):
     """
@@ -20,3 +20,11 @@ class Room(DefaultRoom):
     """
 
     pass
+
+class ChargenRoom(Room):
+    #This room class is used by character-generation rooms.
+    #It makes the ChargenCmdSet available.
+
+    def at_object_creation(self):
+        "This is called only on creation"
+        self.cmdset.add(ChargenCmdset, permanent=True)
