@@ -188,36 +188,6 @@ class Command(BaseCommand):
 #                 self.character = None
 
 
-
-class CmdSetPower(Command):
-    """
-    set the power of a character
-    Usage: +setpower <1-10>
-    This sets the power of the current character and can only be used 
-    at creation
-    """
-
-    key = "+setpower"
-    help_category = "mush"
-
-    def func(self):
-        "This performs the actual command"
-        errmsg = "You must supply a number between 1 and 10"
-        if not self.args:
-            self.caller.msg(errmsg)
-            return
-        try:
-            power = int(self.args)
-        except ValueErorr:
-            self.caller.msg(errmsg)
-        if not (1 <= power <=10):
-            self.caller.msg(errmsg)
-            return
-        #at this point the argument is tested and valid so let's see it.
-        self.caller.db.power = power
-        self.caller.msg("your Power was set to %i."% power);
-
-
 class CmdSetCharClass(Command):
     key = "become "
     def func(self):
