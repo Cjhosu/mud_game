@@ -1,3 +1,4 @@
+import random
 """
 Commands
 
@@ -215,6 +216,28 @@ class CmdSetCharClass(Command):
             self.caller.msg("I should have been able to tell by the muscles!")
 
 
+class CmdAttack(Command):
+    """
+    issues an attack
 
+    Usage: +attack
 
+    This will calculate a new combat score based on your Strength.
+    Your combat score is visible to everyone in the same location
+    """
+
+    key = "+attack"
+    help_category = "mush"
+
+    def func(self):
+        "Calculate an attack based on strength"
+        caller = self.caller
+        strength = caller.db.strength
+        if not strength:
+            strength = 25
+        attack_score = round(random.uniform(1.0, 1.5)* strength)
+        caller.db.attack_score = attack_score
+        message = "%s +attack%s with a combat score of %s!"
+        caller.msg(message % ("You", "", attack_score))
+        caller.location.msg_contents(message % (caller.key, "s", attack_score), exclude=caller)
 

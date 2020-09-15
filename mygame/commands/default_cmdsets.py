@@ -35,6 +35,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         #
         # any commands you add below will overload the default ones.
         #
+        self.add(command.CmdAttack())
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
@@ -72,7 +73,6 @@ class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
         super().at_cmdset_creation()
         #
         # any commands you add below will overload the default ones.
-        #
 
 
 class SessionCmdSet(default_cmds.SessionCmdSet):
