@@ -241,3 +241,4 @@ class CmdAttack(Command):
         caller.msg(message % ("You", "", attack_score))
         caller.location.msg_contents(message % (caller.key, "s", attack_score), exclude=caller)
 
+class CmdCreateNPC
