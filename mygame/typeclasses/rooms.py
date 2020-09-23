@@ -28,3 +28,9 @@ class ChargenRoom(Room):
     def at_object_creation(self):
         "This is called only on creation"
         self.cmdset.add(ChargenCmdset, permanent=True)
+"""
+    def return_appearance(self, looker):
+        The return from this method is what looker sees when looking at this object
+        text = super().return_appearance(looker)
+        return text
+        """
