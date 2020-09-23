@@ -310,7 +310,7 @@ class CmdEditNPC(Command):
     def func(self):
         # do the editing
 
-        allowed_propnames = ("health", "strength", "dex", "intel", "luck", "strength")
+        allowed_propnames = ("health", "strength", "dex", "intel", "luck", "magic")
 
         caller = self.caller
         if not self.args or not self.name:
@@ -337,7 +337,7 @@ class CmdEditNPC(Command):
             # in this example, the properties are all integers...
             intpropval = int(self.propval)
             npc.attributes.add(self.propname, intpropval)
-            caller.msg(f"Set {npc.key}'s property {self.propname} = {npc.attributes.get(self.propname, default = 'N/A')}'")
+            caller.msg(f"You've set {npc.key}'s {self.propname} property to {npc.attributes.get(self.propname, default = 'N/A')}")
         else:
             # propname set, but not propval - show the current value
             caller.msg(f"{npc.key} has property {self.propname} = {npc.attributes.get(self.propname, default = 'N/A')}")
