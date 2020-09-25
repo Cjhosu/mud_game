@@ -214,6 +214,24 @@ class CmdSetCharClass(Command):
             self.caller.db.luck *= 1.1
             self.caller.msg("I should have been able to tell by the muscles!")
 
+class CmdEquip(Command):
+    key = "equip"
+
+    def func(self):
+        caller = self.caller
+        if not caller.db.slots:
+            caller.db.slots = {"armor" : '', "weapon":'' }
+        slots = caller.db.slots
+        if not self.args:
+            caller.msg("You have "+ str(slots)+ " equipped")
+        else:
+            args = self.args.strip()
+            item = caller.search(args, candidates=caller.contents,nofound_string='Wat')
+            if item.is_typeclass('typeclasses.objects.Weapon'):
+                caller.msg("that is a weapon with a damage value of " + str(item.db.damage))
+                slots["weapon"] = item
+            else:
+                caller.msg("Cant")
 
 class CmdAttack(Command):
     """

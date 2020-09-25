@@ -160,3 +160,9 @@ class Object(DefaultObject):
      """
 
     pass
+
+class Weapon(Object):
+    damage = 0
+    
+    def at_object_creation(self):
+        self.db.damage = self.damage
