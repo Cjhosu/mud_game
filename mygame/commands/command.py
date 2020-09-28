@@ -295,11 +295,14 @@ class CmdAttack(Command):
         if slots["weapon"]:
             attack_weapon = slots["weapon"]
             attack_score = self.get_attack_score(attack_weapon,attack_attr)
+            #randomize it a bit
+            attack_score = round(attack_score * random.uniform(1.0,1.5))
 
         #Otherwise use your fists
         else:
             attack_weapon = "your fists"
             attack_score = round(random.uniform(1.0,1.5)* strength)
+
 
         #save most recently computed attack
         caller.db.attack_score = attack_score
