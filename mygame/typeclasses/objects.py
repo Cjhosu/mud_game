@@ -163,6 +163,7 @@ class Object(DefaultObject):
 
 class Weapon(Object):
     damage = 0
-    
+    weapon_type = ''
     def at_object_creation(self):
         self.db.damage = self.damage
+        self.db.weapon_type = self.weapon_type
