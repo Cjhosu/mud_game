@@ -1,4 +1,7 @@
 import random
+import evennia
+from evennia import Command as BaseCommand, create_object
+from typeclasses.characters import Character
 """
 Commands
 
@@ -6,7 +9,6 @@ Commands describe the input the account can do to the game.
 
 """
 
-from evennia import Command as BaseCommand
 
 # from evennia import default_cmds
 
@@ -190,22 +192,23 @@ class Command(BaseCommand):
 
 
 class CmdSetCharClass(Command):
-    key = "become "
+    key = "become"
     def func(self):
         "This is the class choice function"
-        errmsg = "You must pick a valid class (Ranger, Warrior)"
+        errmsg = "You must pick a valid class (Ranger, Warrior, Mage, Druid, Rogue, Paladin)"
+        self.caller.at_object_creation()
         if not self.args:
             self.caller.msg(errmsg)
             return
-        charclass = str(self.args)
-        self.caller.msg(charclass)
+        charclass = str(self.args.strip())
+        self.caller.db.charclass = charclass
         if charclass == 'Ranger':
-            self.caller.db.strength *= .70
+            self.caller.db.strength *= .65
             self.caller.db.magic *= .70
-            self.caller.db.dex *= 1.30
+            self.caller.db.dex *= 1.35
             self.caller.db.intel *= 1.2
             self.caller.db.luck *= 1.1
-            self.caller.msg("Always good to have a Ranger on hand!")
+            self.caller.msg("I can smell the woods on ya, not in a bad way mind you, just a faint musk!")
 
         elif charclass == 'Warrior':
             self.caller.db.strength *= 1.80
@@ -215,6 +218,56 @@ class CmdSetCharClass(Command):
             self.caller.db.luck *= 1.1
             self.caller.msg("I should have been able to tell by the muscles!")
 
+        elif charclass == 'Mage':
+            self.caller.db.strength *= 1.80
+            self.caller.db.magic *= .45
+            self.caller.db.dex *= 1.05
+            self.caller.db.intel *= .60
+            self.caller.db.luck *= 1.1
+            self.caller.msg("Spells for days son!")
+
+        elif charclass == 'Druid':
+            self.caller.db.strength *= .70
+            self.caller.db.magic *= 1.20
+            self.caller.db.dex *= 1.15
+            self.caller.db.intel *= 1.05
+            self.caller.db.luck *= .90
+            self.caller.msg("Ah, Blessed be")
+
+        elif charclass == 'Rogue':
+            self.caller.db.strength *= 1.15
+            self.caller.db.magic *= .45
+            self.caller.db.dex *= 1.25
+            self.caller.db.intel *= .95
+            self.caller.db.luck *= 1.2
+            self.caller.msg("That's fine, try not to steal anything.")
+
+        elif charclass == 'Paladin':
+            self.caller.db.strength *= 1.50
+            self.caller.db.magic *= 1.05
+            self.caller.db.dex *= .85
+            self.caller.db.intel *= .60
+            self.caller.db.luck *= 1.0
+            self.caller.msg("I see you follow the righteous path")
+
+class CmdEquip(Command):
+    key = "equip"
+
+    def func(self):
+        caller = self.caller
+        if not caller.db.slots:
+            caller.db.slots = {"armor" : '', "weapon":'' }
+        slots = caller.db.slots
+        if not self.args:
+            caller.msg("You have "+ str(slots)+ " equipped")
+        else:
+            args = self.args.strip()
+            item = caller.search(args, candidates=caller.contents,nofound_string='Wat')
+            if item.is_typeclass('typeclasses.objects.Weapon'):
+                caller.msg("that is a weapon with a damage value of " + str(item.db.damage))
+                slots["weapon"] = item
+            else:
+                caller.msg("Cant")
 
 class CmdAttack(Command):
     """
@@ -228,16 +281,161 @@ class CmdAttack(Command):
 
     key = "+attack"
     help_category = "mush"
+    attack_attr_dict = {"Ranger" : "dex", "Warrior" : "strength", "Mage" : "magic"}
 
     def func(self):
-        "Calculate an attack based on strength"
+        "Calculate an attack based on class and weapon"
         caller = self.caller
-        strength = caller.db.strength
-        if not strength:
-            strength = 25
-        attack_score = round(random.uniform(1.0, 1.5)* strength)
+        slots = caller.db.slots
+
+        #What attribute do you use to attack?
+        attack_attr =  self.get_attack_attribute()
+
+        #If you have an equipped weapon attack with it...
+        if slots["weapon"]:
+            attack_weapon = slots["weapon"]
+            attack_score = self.get_attack_score(attack_weapon,attack_attr)
+
+        #Otherwise use your fists
+        else:
+            attack_weapon = "your fists"
+            attack_score = round(random.uniform(1.0,1.5)* strength)
+
+        #save most recently computed attack
         caller.db.attack_score = attack_score
-        message = "%s +attack%s with a combat score of %s!"
-        caller.msg(message % ("You", "", attack_score))
-        caller.location.msg_contents(message % (caller.key, "s", attack_score), exclude=caller)
+
+        #handle messaging
+        message = "%s +attack%s with %s for a combat score of %s!"
+        caller.msg(message % ("You", "",attack_weapon, attack_score))
+        caller.location.msg_contents(message % (caller.key, "s", attack_weapon, attack_score), exclude=caller)
+
+    def get_attack_attribute(self):
+        caller = self.caller
+        charclass = caller.db.charclass
+        #find your favored attribute based on your class
+        attack_attr = self.attack_attr_dict[charclass]
+        return attack_attr
+
+    def weapon_multiplier(self,weapon, attack_attr):
+        #Your weapon will do more for you if you know how to use it
+        caller=self.caller
+        multiplier = round(weapon.db.damage * (random.uniform(1.0,1.5)))
+        if weapon.db.weapon_type == 'melee' and attack_attr == 'strength':
+            multiplier
+        elif weapon.db.weapon_type == 'ranged' and attack_attr == 'dex':
+            multiplier
+        else:
+            multiplier = weapon.db.damage
+        return multiplier
+
+    def get_attack_score(self, weapon, attack_attr):
+        caller = self.caller
+        attr_val = caller.attributes.get(attack_attr)
+        #Knowing your attack attribute and the weapon equipped, find if it has a buff
+        multiplier = self.weapon_multiplier(weapon, attack_attr)
+        attack_score = attr_val + multiplier
+        return attack_score
+
+class CmdCreateNPC(Command):
+    """
+    create a new npc
+
+    Usage:
+        +createNPC <name>
+    """
+
+    key = "+createnpc"
+    aliases = ["+createNPC"]
+    locks = "call:not perm(nopcs)"
+    help_category = "mush"
+
+    def func(self):
+        #creates an object and names it
+        caller = self.caller
+        if not self.args:
+            caller.msg("Usage: +createNPC <name>")
+            return
+        if not caller.location:
+            #you can't create a npc if you are out of character
+            caller.msg("You must have a location to create an npc")
+            return
+        name = self.args.strip().capitalize()
+        npc = create_object("characters.Character",
+                             key=name,
+                             location=caller.location,
+                             locks="edit:id(%i) and perm(Builders);call:false()" % caller.id)
+        #announce
+        message = "%s created the NPC '%s'."
+        caller.msg(message % ("You", name))
+        caller.location.msg_contents(message % (caller.key, name), exclude=caller)
+
+class CmdEditNPC(Command):
+    """
+    edit an existing NPC
+
+    Usage:
+      +editnpc <name>[/atribute> [=value]]
+
+    Examples:
+    +editnpc mynpc/health = 5 - sets health to 5
+    +editnpc mynpc/health  - displays health value
+    +editnpc mynpc - displays attributes you can edit
+
+    ths command edxits an existing NPC.  You must have permissions to edit this npc.
+
+    """
+    key = "+editnpc"
+    aliases = ["+editNPC"]
+    locks = "cmd:not perm(nonpcs)"
+    help_category = "mush"
+
+    def parse(self):
+        "We need to do some parsing here"
+        args = self.args
+        propname, propval = None, None
+        if "=" in args:
+            args, propval = [part.strip() for part in args.rsplit("=",1)]
+        if "/" in args:
+            args, propname = [part.strip() for part in args.rsplit("/", 1)]
+        # store, so we can access it below in sie func()
+        self.name = args
+        self.propname = propname
+        # a propval without a propname is meaningless
+        self.propval = propval if propname else None
+
+    def func(self):
+        # do the editing
+
+        allowed_propnames = ("health", "strength", "dex", "intel", "luck", "magic")
+
+        caller = self.caller
+        if not self.args or not self.name:
+            caller.msg("Usage: +editnpc name[/propname][=propval]")
+            return
+        npc = caller.search(self.name)
+        try:
+            if not npc.access(caller, "edit"):
+                caller.msg("You cannot change this NPC")
+                return
+        except:
+            caller.msg("Who dat?")
+            return
+        if not self.propname:
+            # based on our examples this mean we just list stats
+            output = f"Properties of {npc.key}:"
+            for propname in allowed_propnames:
+                output += f"\n {propname} = {npc.attributes.get(propname, default = 'N/A')}"
+            caller.msg(output)
+        elif self.propname not in allowed_propnames:
+            caller.msg(f"You may only change {',' .join(allowed_propnames)}.")
+        elif self.propval:
+            # assigning a new propvalue
+            # in this example, the properties are all integers...
+            intpropval = int(self.propval)
+            npc.attributes.add(self.propname, intpropval)
+            caller.msg(f"You've set {npc.key}'s {self.propname} property to {npc.attributes.get(self.propname, default = 'N/A')}")
+        else:
+            # propname set, but not propval - show the current value
+            caller.msg(f"{npc.key} has property {self.propname} = {npc.attributes.get(self.propname, default = 'N/A')}")
+
 

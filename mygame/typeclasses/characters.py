@@ -38,4 +38,5 @@ class Character(DefaultCharacter):
         self.db.dex = 100
         self.db.intel = 100
         self.db.luck = 100
+        self.db.health = 100
     pass
