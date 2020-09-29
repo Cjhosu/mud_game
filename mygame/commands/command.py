@@ -281,7 +281,7 @@ class CmdAttack(Command):
 
     key = "+attack"
     help_category = "mush"
-    attack_attr_dict = {"Ranger" : "dex", "Warrior" : "strength", "Mage" : "magic"}
+    attack_attr_dict = {"Ranger" : "dex", "Warrior" : "strength", "Mage" : "magic", "Druid" : "magic", "Rogue" : "dex", "Paladin" : "strength"}
 
     def func(self):
         "Calculate an attack based on class and weapon"
@@ -294,7 +294,8 @@ class CmdAttack(Command):
         #If you have an equipped weapon attack with it...
         if slots["weapon"]:
             attack_weapon = slots["weapon"]
-            attack_score = self.get_attack_score(attack_weapon,attack_attr)
+            init_attack_score = self.get_attack_score(attack_weapon,attack_attr)
+            attack_score = round(random.uniform(1.0,1.5)* init_attack_score)
 
         #Otherwise use your fists
         else:
@@ -319,10 +320,12 @@ class CmdAttack(Command):
     def weapon_multiplier(self,weapon, attack_attr):
         #Your weapon will do more for you if you know how to use it
         caller=self.caller
-        multiplier = round(weapon.db.damage * (random.uniform(1.0,1.5)))
-        if weapon.db.weapon_type == 'melee' and attack_attr == 'strength':
+        multiplier = round(weapon.db.damage * (random.uniform(1.25,1.85)))
+        if weapon.db.weapon_type in ['sword', 'battleaxe'] and attack_attr == 'strength':
             multiplier
-        elif weapon.db.weapon_type == 'ranged' and attack_attr == 'dex':
+        elif weapon.db.weapon_type in ['bow', 'dagger'] and attack_attr == 'dex':
+            multiplier
+        elif weapon.db.wepon_type == 'staff' and attack_attr == "magic":
             multiplier
         else:
             multiplier = weapon.db.damage
