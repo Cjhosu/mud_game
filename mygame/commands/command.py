@@ -219,17 +219,17 @@ class CmdSetCharClass(Command):
             self.caller.msg("I should have been able to tell by the muscles!")
 
         elif charclass == 'Mage':
-            self.caller.db.strength *= 1.80
-            self.caller.db.magic *= .45
-            self.caller.db.dex *= 1.05
-            self.caller.db.intel *= .60
+            self.caller.db.strength *= .45
+            self.caller.db.magic *= 1.70
+            self.caller.db.dex *= .90
+            self.caller.db.intel *= .85
             self.caller.db.luck *= 1.1
             self.caller.msg("Spells for days son!")
 
         elif charclass == 'Druid':
             self.caller.db.strength *= .70
-            self.caller.db.magic *= 1.20
-            self.caller.db.dex *= 1.15
+            self.caller.db.magic *= 1.30
+            self.caller.db.dex *= 1.05
             self.caller.db.intel *= 1.05
             self.caller.db.luck *= .90
             self.caller.msg("Ah, Blessed be")
@@ -281,7 +281,22 @@ class CmdAttack(Command):
 
     key = "+attack"
     help_category = "mush"
-    attack_attr_dict = {"Ranger" : "dex", "Warrior" : "strength", "Mage" : "magic", "Druid" : "magic", "Rogue" : "dex", "Paladin" : "strength"}
+    charclass_attack_attr_dict = {
+        "Ranger" : "dex",
+        "Warrior" : "strength",
+        "Mage" : "magic",
+        "Druid" : "magic",
+        "Rogue" : "dex",
+        "Paladin" : "strength"
+        }
+
+    weapon_attack_attr_dict = {
+            "sword" : "strength",
+            "battleaxe" : "strength",
+            "dagger" : "dex",
+            "bow" : "dex",
+            "staff" : "magic"
+            }
 
     def func(self):
         "Calculate an attack based on class and weapon"
@@ -314,18 +329,14 @@ class CmdAttack(Command):
         caller = self.caller
         charclass = caller.db.charclass
         #find your favored attribute based on your class
-        attack_attr = self.attack_attr_dict[charclass]
+        attack_attr = self.charclass_attack_attr_dict[charclass]
         return attack_attr
 
     def weapon_multiplier(self,weapon, attack_attr):
         #Your weapon will do more for you if you know how to use it
         caller=self.caller
         multiplier = round(weapon.db.damage * (random.uniform(1.25,1.85)))
-        if weapon.db.weapon_type in ['sword', 'battleaxe'] and attack_attr == 'strength':
-            multiplier
-        elif weapon.db.weapon_type in ['bow', 'dagger'] and attack_attr == 'dex':
-            multiplier
-        elif weapon.db.wepon_type == 'staff' and attack_attr == "magic":
+        if self.weapon_attack_attr_dict[weapon.db.weapon_type] == attack_attr:
             multiplier
         else:
             multiplier = weapon.db.damage
