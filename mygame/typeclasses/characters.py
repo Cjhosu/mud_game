@@ -40,3 +40,12 @@ class Character(DefaultCharacter):
         self.db.luck = 100
         self.db.health = 100
     pass
+
+
+class NPC(Character):
+
+    def at_char_entered(self, character):
+        if self.db.is_aggressive:
+            self.execute_cmd(f"say Graaah, die {character}!")
+        else:
+            self.execute_cmd(f"say Greetings, {character}!")
