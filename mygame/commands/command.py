@@ -1,7 +1,7 @@
 import random
 import evennia
 from evennia import Command as BaseCommand, create_object
-from typeclasses.characters import Character
+from typeclasses.characters import Character, NPC
 """
 Commands
 
@@ -374,7 +374,7 @@ class CmdCreateNPC(Command):
             caller.msg("You must have a location to create an npc")
             return
         name = self.args.strip().capitalize()
-        npc = create_object("characters.Character",
+        npc = create_object("characters.NPC",
                              key=name,
                              location=caller.location,
                              locks="edit:id(%i) and perm(Builders);call:false()" % caller.id)
