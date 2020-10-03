@@ -10,7 +10,7 @@ def menu_start_node(caller):
     return text, options
 
 def info1(caller):
-    text = "'It is. But hey, welcome to our pub!  We a welcoming bunch here at the end of civilization!  Here in Magicland you can be whatever you want as long as it is one of six classes.  When we are done talking just announce it to the room. (say something like 'become Warrior')'"
+    text = "'It is. But hey, welcome to our pub!  Things can get rowdy here at the end of civilization!  Here in Magicland you can be whatever you want as long as it is one of six classes.  When we are done talking just announce it to the room. (say something like 'become Warrior')'"
 
     options = (
             {"desc" : "Sounds great, I am ready to choose!", "goto" : "END"},
