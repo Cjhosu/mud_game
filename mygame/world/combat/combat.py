@@ -1,6 +1,8 @@
 from commands.command import Command
 import random
 
+class CombatHandler():
+    pass
 
 class CmdAttack(Command):
     """
