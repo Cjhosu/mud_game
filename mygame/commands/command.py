@@ -255,7 +255,7 @@ class CmdEquip(Command):
     def func(self):
         caller = self.caller
         if not caller.db.slots:
-            caller.db.slots = {"armor" : '', "weapon":'' }
+            caller.db.slots = {"armor" : None, "weapon":None }
         slots = caller.db.slots
         if not self.args:
             caller.msg("You have "+ str(slots)+ " equipped")
@@ -263,7 +263,7 @@ class CmdEquip(Command):
             args = self.args.strip()
             item = caller.search(args, candidates=caller.contents,nofound_string='Wat')
             if item.is_typeclass('typeclasses.objects.Weapon'):
-                caller.msg("that is a weapon with a damage value of " + str(item.db.damage))
+                caller.msg("You have equipped a weapon with a damage value of " + str(item.db.damage))
                 slots["weapon"] = item
             else:
                 caller.msg("Cant")
