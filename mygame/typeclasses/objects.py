@@ -1,3 +1,5 @@
+from world.helpers import is_equipped
+
 """
 Object
 
@@ -167,3 +169,10 @@ class Weapon(Object):
     def at_object_creation(self):
         self.db.damage = self.damage
         self.db.weapon_type = self.weapon_type
+    def at_drop(self,dropper):
+        if is_equipped(dropper, "weapon"):
+            if dropper.db.slots["weapon"] == self:
+                dropper.msg("You throw your equipped weapon on the ground!")
+                dropper.db.slots["weapon"] = None
+
+

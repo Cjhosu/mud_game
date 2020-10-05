@@ -1,4 +1,5 @@
 from commands.command import Command
+from world.helpers import is_equipped
 import random
 
 class CombatHandler():
@@ -42,7 +43,7 @@ class CmdAttack(Command):
         attack_attr =  self.get_attack_attribute()
 
         #If you have an equipped weapon attack with it...
-        if slots["weapon"]:
+        if is_equipped(caller, "weapon"):
             attack_weapon = slots["weapon"]
             init_attack_score = self.get_attack_score(attack_weapon,attack_attr)
             attack_score = round(random.uniform(1.0,1.5)* init_attack_score)
@@ -85,5 +86,5 @@ class CmdAttack(Command):
         attack_score = attr_val + multiplier
         return attack_score
 
-class resolve_attack(attacker,target,attack_score):
+class resolve_attack():
     pass
