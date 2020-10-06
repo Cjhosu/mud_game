@@ -23,8 +23,7 @@ class CombatHandler():
         #If you have an equipped weapon attack with it...
 
     def init_combat(self, caller, target):
-        weapon_check = equipped_check(self.caller, "weapon")
-        is_equipped = weapon_check
+        is_equipped = equipped_check(self.caller, "weapon")
         if target:
             if not caller.search(target, location = caller.location):
                 return
@@ -40,12 +39,8 @@ class CombatHandler():
 
             #Otherwise use your fists
         else:
-            caller.msg(is_equipped)
             attack_weapon = "your fists"
             attack_score = round(random.uniform(1.0,1.5)* caller.db.strength)
-
-        #save most recently computed attack
-        caller.ndb.attack_score = attack_score
 
         #handle messaging
         message = "%s +attack%s with %s for a combat score of %s!"
@@ -76,7 +71,6 @@ class CombatHandler():
         multiplier = self.weapon_multiplier(weapon, attack_attr)
         attack_score = attr_val + multiplier
         return attack_score
-    pass
 
 class resolve_attack():
     pass
