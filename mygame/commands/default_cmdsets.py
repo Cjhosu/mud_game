@@ -18,7 +18,6 @@ from evennia import default_cmds
 from evennia import CmdSet
 from commands import command
 from world import storynpcs
-from world.combat import combat
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -33,7 +32,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         """
         Populates the cmdset
         """
-        self.add(combat.CmdAttack())
+        self.add(command.CmdAttack())
         self.add(command.CmdCreateNPC())
         self.add(command.CmdEditNPC())
         self.add(command.CmdEquip())

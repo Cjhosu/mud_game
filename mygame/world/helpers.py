@@ -1,9 +1,10 @@
 
 
 
-def is_equipped(caller, item):
+def equipped_check(caller, item):
     slots = caller.db.slots
     caller = str(caller)
+    equipped = False
 
     if slots:
         if slots[item]:
@@ -12,6 +13,6 @@ def is_equipped(caller, item):
         else:
             message = caller + "has no "+ item + " equipped"
     else :
-        message = caller + "has no equipment slots"
+        message = caller + " has no equipment slots"
 
     return equipped, message
