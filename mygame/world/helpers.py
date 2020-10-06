@@ -13,6 +13,6 @@ def equipped_check(caller, item):
         else:
             message = caller + "has no "+ item + " equipped"
     else :
-        message = caller + "has no equipment slots"
+        message = caller + " has no equipment slots"
 
     return equipped, message

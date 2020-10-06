@@ -1,6 +1,7 @@
 import evennia
 from evennia import Command as BaseCommand, create_object
 from typeclasses.characters import Character, NPC
+from world.combat.combat import CombatHandler
 """
 Commands
 
@@ -371,4 +372,27 @@ class CmdEditNPC(Command):
             # propname set, but not propval - show the current value
             caller.msg(f"{npc.key} has property {self.propname} = {npc.attributes.get(self.propname, default = 'N/A')}")
 
+class CmdAttack(Command):
+    """
+    issues an attack
 
+    Usage: +attack
+
+    This will calculate a new combat score based on your Strength.
+    Your combat score is visible to everyone in the same location
+    """
+
+    key = "+attack"
+    help_category = "mush"
+
+    def func(self):
+        caller = self.caller
+        cmbt = CombatHandler()
+        "parse target"
+        if self.args:
+            target = self.args.strip()
+            cmbt.target = target
+        else:
+            target = None
+        cmbt.caller = caller
+        cmbt.init_combat(caller, target)

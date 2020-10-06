@@ -1,4 +1,3 @@
-from commands.command import Command
 from world.helpers import equipped_check
 import random
 
@@ -31,8 +30,7 @@ class CombatHandler():
                 return
         else:
             caller.msg("You test your might...")
-        if is_equipped == True:
-            caller.msg(is_equipped)
+        if is_equipped[0] == True:
             slots = caller.db.slots
             attack_weapon = slots["weapon"]
             #What attribute do you use to attack?
@@ -42,6 +40,7 @@ class CombatHandler():
 
             #Otherwise use your fists
         else:
+            caller.msg(is_equipped)
             attack_weapon = "your fists"
             attack_score = round(random.uniform(1.0,1.5)* caller.db.strength)
 
@@ -78,32 +77,6 @@ class CombatHandler():
         attack_score = attr_val + multiplier
         return attack_score
     pass
-
-class CmdAttack(Command):
-    """
-    issues an attack
-
-    Usage: +attack
-
-    This will calculate a new combat score based on your Strength.
-    Your combat score is visible to everyone in the same location
-    """
-
-    key = "+attack"
-    help_category = "mush"
-
-    def func(self):
-        caller = self.caller
-        cmbt = CombatHandler()
-        "parse target"
-        if self.args:
-            target = self.args.strip()
-            cmbt.target = target
-        else:
-            target = None
-        cmbt.caller = caller
-        cmbt.init_combat(caller, target)
-
 
 class resolve_attack():
     pass
