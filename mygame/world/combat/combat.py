@@ -24,7 +24,6 @@ class CombatHandler():
         #If you have an equipped weapon attack with it...
 
     def init_combat(self, caller, target):
-        is_equipped = equipped_check(self.caller, "weapon")
         attack_weapon = self.get_attack_weapon(caller)
         attack_attr =  self.get_attack_attribute()
         init_attack_score = self.get_attack_score(attack_weapon,attack_attr)
@@ -35,12 +34,12 @@ class CombatHandler():
             else:
                 target = self.caller.search(self.target)
                 defense_score = self.get_defense_score(target)
-                caller.msg(defense_score)
 
                 #What attribute do you use to attack?
                 resolve = self.resolve_attack(target, defense_score, attack_score, attack_weapon)
                 dealt_damage = resolve[0]
                 damage_msg = resolve[1]
+                caller.msg(damage_msg)
 
         else:
             caller.msg("You test your might... You attack the air with " + str(attack_weapon) +" for an attack score of " + str(attack_score))
