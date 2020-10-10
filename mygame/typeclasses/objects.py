@@ -170,7 +170,7 @@ class Weapon(Object):
         self.db.damage = self.damage
         self.db.weapon_type = self.weapon_type
     def at_drop(self,dropper):
-        if equipped_check(dropper, "weapon"):
+        if equipped_check(dropper, "weapon")[0] == True:
             if dropper.db.slots["weapon"] == self:
                 dropper.msg("You throw your equipped weapon on the ground!")
                 dropper.db.slots["weapon"] = None
@@ -181,7 +181,7 @@ class Armor(Object):
     def at_object_creation(self):
         self.db.defense_bonus = self.defense_bonus
     def at_drop(self,dropper):
-        if equipped_check(dropper, "armor"):
+        if equipped_check(dropper, "armor")[0] == True:
             if dropper.db.slots["armor"] == self:
                 dropper.msg("You throw your equipped armor on the ground!")
                 dropper.db.slots["armor"] = None
