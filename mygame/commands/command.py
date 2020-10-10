@@ -262,12 +262,16 @@ class CmdEquip(Command):
             caller.msg("You have "+ str(slots)+ " equipped")
         else:
             args = self.args.strip()
-            item = caller.search(args, candidates=caller.contents,nofound_string='Wat')
-            if item.is_typeclass('typeclasses.objects.Weapon'):
-                caller.msg("You have equipped a weapon with a damage value of " + str(item.db.damage))
-                slots["weapon"] = item
-            else:
-                caller.msg("Cant")
+            item = caller.search(args, candidates=caller.contents,nofound_string= args +" doesn't seem to be something you are carrying")
+            if item:
+                if item.is_typeclass('typeclasses.objects.Weapon'):
+                    slots["weapon"] = item
+                    caller.msg("You have equipped "+ str(item) +" to your weapon slot, it has a damage value of " + str(item.db.damage))
+                elif item.is_typeclass('typeclasses.objects.Armor'):
+                    slots["armor"] = item
+                    caller.msg("You have equipped " + str(item) + " to your armor slot it has a defense bonus of " + str(item.db.defense_bonus))
+                else:
+                    caller.msg("That item is not equipable")
 
 
 class CmdCreateNPC(Command):
