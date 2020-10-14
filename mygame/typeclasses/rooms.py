@@ -34,3 +34,4 @@ class ChargenRoom(Room):
         text = super().return_appearance(looker)
         return text
         """
+

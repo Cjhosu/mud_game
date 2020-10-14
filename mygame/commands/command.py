@@ -1,7 +1,9 @@
 import evennia
-from evennia import Command as BaseCommand, create_object
+from evennia import Command as BaseCommand, DefaultRoom, DefaultExit, DefaultObject
+from evennia.utils.create import create_object
 from typeclasses.characters import Character, NPC
 from world.combat.combat import CombatHandler
+
 """
 Commands
 
@@ -400,3 +402,4 @@ class CmdAttack(Command):
             target = None
         cmbt.caller = caller
         cmbt.init_combat(caller, target)
+

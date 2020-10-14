@@ -17,6 +17,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 from evennia import default_cmds
 from evennia import CmdSet
 from commands import command
+from typeclasses import npcshop
 from evennia.commands.default import building
 from world import storynpcs
 
@@ -38,6 +39,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(command.CmdEditNPC())
         self.add(command.CmdEquip())
         self.add(storynpcs.CmdTalk())
+        self.add(npcshop.CmdBuildShop())
         super().at_cmdset_creation()
         #
         # any commands you add below will overload the default ones.
