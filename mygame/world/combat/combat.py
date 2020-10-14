@@ -2,9 +2,7 @@ from world.helpers import equipped_check
 import random
 
 class CombatHandler():
-    target = {}
     defense_score ={}
-    caller = {}
     charclass_attack_attr_dict = {
         "Ranger" : "dex",
         "Warrior" : "strength",
@@ -38,10 +36,10 @@ class CombatHandler():
                 defense_score = self.get_defense_score(target)
 
                 #What attribute do you use to attack?
-                resolve = self.resolve_attack(target, defense_score, attack_score, attack_weapon)
+                resolve = self.resolve_attack(defense_score, attack_score, attack_weapon)
                 dealt_damage = resolve[0]
                 damage_msg = resolve[1]
-                caller.msg(damage_msg)
+                caller.location.msg_contents(damage_msg)
 
         else:
             caller.msg("You test your might... You attack the air with " + str(attack_weapon) +" for an attack score of " + str(attack_score))
@@ -87,15 +85,21 @@ class CombatHandler():
         return attack_score
 
     def get_defense_score(self, target):
-        defense_score = target.db.defense
-        if not defense_score:
-            defense_score = 0
+        caller = self.caller
+        is_equipped = equipped_check(target, "armor")
+        if is_equipped[0] == True:
+            slots = target.db.slots
+            defense_bonus = slots["armor"].db.defense_bonus or 0
+        else:
+            defense_bonus = 0
+        defense_score = target.db.defense + defense_bonus
+        caller.msg(defense_score)
         return defense_score
 
-    def resolve_attack(self, target, defense_score, attack_score, attack_weapon):
+    def resolve_attack(self, defense_score, attack_score, attack_weapon):
         dealt_damage = attack_score - defense_score
         if dealt_damage > 0:
-            message = "You've attacked "+ self.target + " for " + str(dealt_damage) + " with "+str(attack_weapon)
+            message = str(self.caller) + " attacked "+ self.target + " for " + str(dealt_damage) + " with "+str(attack_weapon)
         else:
-            message = self.target + " shrugs off your attack."
+            message = self.target + " shrugs off an attack from " + str(self.caller)
         return dealt_damage, message
