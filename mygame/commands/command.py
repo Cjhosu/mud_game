@@ -1,4 +1,5 @@
 import evennia
+import time
 from evennia import Command as BaseCommand, DefaultRoom, DefaultExit, DefaultObject
 from evennia.utils.create import create_object
 from typeclasses.characters import Character, NPC
@@ -393,6 +394,10 @@ class CmdAttack(Command):
 
     def func(self):
         caller = self.caller
+        now = time.time()
+        if hasattr(self, "lastattack") and now - self.lastattack < 5 :
+            caller.msg("Your attack is on cooldown")
+            return
         cmbt = CombatHandler()
         "parse target"
         if self.args:
@@ -402,4 +407,5 @@ class CmdAttack(Command):
             target = None
         cmbt.caller = caller
         cmbt.init_combat(caller, target)
+        self.lastattack = now
 
