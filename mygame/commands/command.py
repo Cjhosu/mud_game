@@ -193,66 +193,6 @@ class Command(BaseCommand):
 #             else:
 #                 self.character = None
 
-
-class CmdSetCharClass(Command):
-    key = "become"
-    def func(self):
-        "This is the class choice function"
-        errmsg = "You must pick a valid class (Ranger, Warrior, Mage, Druid, Rogue, Paladin)"
-        self.caller.at_object_creation()
-        if not self.args:
-            self.caller.msg(errmsg)
-            return
-        charclass = str(self.args.strip())
-        self.caller.db.charclass = charclass
-        if charclass == 'Ranger':
-            self.caller.db.strength *= .65
-            self.caller.db.magic *= .70
-            self.caller.db.dex *= 1.35
-            self.caller.db.intel *= 1.2
-            self.caller.db.luck *= 1.1
-            self.caller.msg("I can smell the woods on ya, not in a bad way mind you, just a faint musk!")
-
-        elif charclass == 'Warrior':
-            self.caller.db.strength *= 1.80
-            self.caller.db.magic *= .45
-            self.caller.db.dex *= 1.05
-            self.caller.db.intel *= .60
-            self.caller.db.luck *= 1.1
-            self.caller.msg("I should have been able to tell by the muscles!")
-
-        elif charclass == 'Mage':
-            self.caller.db.strength *= .45
-            self.caller.db.magic *= 1.70
-            self.caller.db.dex *= .90
-            self.caller.db.intel *= .85
-            self.caller.db.luck *= 1.1
-            self.caller.msg("Spells for days son!")
-
-        elif charclass == 'Druid':
-            self.caller.db.strength *= .70
-            self.caller.db.magic *= 1.30
-            self.caller.db.dex *= 1.05
-            self.caller.db.intel *= 1.05
-            self.caller.db.luck *= .90
-            self.caller.msg("Ah, Blessed be")
-
-        elif charclass == 'Rogue':
-            self.caller.db.strength *= 1.15
-            self.caller.db.magic *= .45
-            self.caller.db.dex *= 1.25
-            self.caller.db.intel *= .95
-            self.caller.db.luck *= 1.2
-            self.caller.msg("That's fine, try not to steal anything.")
-
-        elif charclass == 'Paladin':
-            self.caller.db.strength *= 1.50
-            self.caller.db.magic *= 1.05
-            self.caller.db.dex *= .85
-            self.caller.db.intel *= .60
-            self.caller.db.luck *= 1.0
-            self.caller.msg("I see you follow the righteous path")
-
 class CmdEquip(Command):
     key = "equip"
 

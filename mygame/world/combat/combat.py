@@ -58,7 +58,7 @@ class CombatHandler():
         charclass = caller.db.charclass
         #find your favored attribute based on your class
         if not charclass:
-            caller.msg("You should pick a class before you go picking fights!")
+            caller.msg("You should pick a class before you go picking fights! (Talk to Caroline at Shieldmaiden's)")
         else:
             attack_attr = self.charclass_attack_attr_dict[charclass]
             return attack_attr

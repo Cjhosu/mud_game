@@ -45,6 +45,9 @@ class Character(DefaultCharacter):
 
 class NPC(Character):
 
+    def at_object_creation(self):
+        super(NPC, self).at_object_creation()
+
     def at_char_entered(self, character):
         if self.db.is_aggressive:
             self.execute_cmd(f"say Graaah, die {character}!")
