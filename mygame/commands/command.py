@@ -2,6 +2,7 @@ import evennia
 import time
 from evennia import Command as BaseCommand, DefaultRoom, DefaultExit, DefaultObject
 from evennia.utils.create import create_object
+from evennia.utils import evtable
 from typeclasses.characters import Character, NPC
 from world.combat.combat import CombatHandler
 
@@ -349,3 +350,23 @@ class CmdAttack(Command):
         cmbt.init_combat(caller, target)
         self.lastattack = now
 
+class CmdShowAttr(Command):
+
+    key = 'mystats'
+    help_category = "mush"
+
+    def func(self):
+        caller = self.caller
+        charclass = caller.db.charclass
+        defense = round(caller.db.defense)
+        health = round(caller.db.health)
+        intel = round(caller.db.intel)
+        luck = round(caller.db.luck)
+        magic = round(caller.db.magic)
+        strength = round(caller.db.strength)
+        dex = round(caller.db.dex)
+
+        table = evtable.EvTable("Attribute", "Value",
+                table = [["charclass", "defense","health","intel","luck", "magic","dex", "strength"],
+                [charclass, defense, health, intel, luck, magic, dex, strength]])
+        caller.msg(table)
