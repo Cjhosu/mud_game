@@ -41,6 +41,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(storynpcs.CmdTalk())
         self.add(npcshop.CmdBuildShop())
         self.add(command.CmdShowAttr())
+        self.add(command.CmdSetStance())
         super().at_cmdset_creation()
         #
         # any commands you add below will overload the default ones.

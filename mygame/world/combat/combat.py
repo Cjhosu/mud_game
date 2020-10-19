@@ -1,4 +1,4 @@
-from world.helpers import equipped_check
+from world.helpers import equipped_check, get_num_dice, DiceRoll
 import random
 
 class CombatHandler():
@@ -36,7 +36,7 @@ class CombatHandler():
                 defense_score = self.get_defense_score(target)
 
                 #What attribute do you use to attack?
-                resolve = self.resolve_attack(defense_score, attack_score, attack_weapon)
+                resolve = self.resolve_attack(defense_score, attack_score, attack_weapon, target)
                 dealt_damage = resolve[0]
                 damage_msg = resolve[1]
                 caller.location.msg_contents(damage_msg)
@@ -93,13 +93,32 @@ class CombatHandler():
         else:
             defense_bonus = 0
         defense_score = target.db.defense + defense_bonus
-        caller.msg(defense_score)
         return defense_score
 
-    def resolve_attack(self, defense_score, attack_score, attack_weapon):
+    def resolve_attack(self, defense_score, attack_score, attack_weapon, target):
         dealt_damage = attack_score - defense_score
-        if dealt_damage > 0:
-            message = str(self.caller) + " attacked "+ self.target + " for " + str(dealt_damage) + " with "+str(attack_weapon)
-        else:
-            message = self.target + " shrugs off an attack from " + str(self.caller)
+        stance = target.db.stance
+        if stance in ("evasive", "defensive"):
+            if stance == "evasive":
+                dex = target.db.dex
+                stat = dex
+            elif stance == "defensive":
+                defense = target.db.defense
+                stat = defense
+
+            num_dice = get_num_dice(stat) or 1
+            dice = DiceRoll(num_dice, pass_cond = [1])
+            passed = dice.roll()[1]
+            self.caller.msg(passed)
+
+            if passed == True and stance == "evasive":
+                dealt_damage = None
+                message = str(target) + " dodges and takes no damage!"
+            elif passed == True and stance == "defensive":
+                dealt_damage = None
+                message = str(target) + " blocks and takes no damage!"
+        if dealt_damage != None and dealt_damage > 0:
+            message = str(self.caller) + " attacked "+ str(target) + " for " + str(dealt_damage) + " with "+str(attack_weapon)
+        elif dealt_damage != None and dealt_damage <= 0:
+            message = str(target) + " shrugs off an attack from " + str(self.caller)
         return dealt_damage, message

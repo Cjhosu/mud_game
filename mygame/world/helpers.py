@@ -19,6 +19,15 @@ class DiceRoll:
                 passed = None
         return(results, passed)
 
+def get_num_dice(stat):
+    num_dice = 1
+    base = 110
+    while base < stat and num_dice < 8:
+        base += 10
+        num_dice +=1
+    return num_dice
+
+
 def equipped_check(caller, item):
     slots = caller.db.slots
     caller = str(caller)

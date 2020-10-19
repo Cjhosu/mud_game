@@ -193,6 +193,12 @@ class CmdAttack(Command):
 
 class CmdShowAttr(Command):
 
+    """
+     prints the main character attribute in a table
+
+    Usage: mystats
+
+    """
     key = 'mystats'
     help_category = "mush"
 
@@ -211,3 +217,33 @@ class CmdShowAttr(Command):
                 table = [["charclass", "defense","health","intel","luck", "magic","dex", "strength"],
                 [charclass, defense, health, intel, luck, magic, dex, strength]])
         caller.msg(table)
+
+class CmdSetStance(Command):
+
+    """
+    sets the players stance to aggressive, defensive, or evasive
+
+    Usage:
+      +set stance <stance option>
+
+    Examples:
+    +set stance evasive
+    """
+
+    key = '+set stance'
+    help_category = "mush"
+
+    def func(self):
+        caller = self.caller
+        err_msg = "Usage: +set stance [aggressive]|[defensive]|[evasive]"
+        if not self.args:
+            caller.msg(err_msg)
+            return
+        else:
+            args = self.args.strip()
+        if args not in ("aggressive","defensive","evasive"):
+            caller.msg(err_msg)
+        else:
+            caller.db.stance = args
+            caller.msg("Your stance has been set to " + args)
+
