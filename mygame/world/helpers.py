@@ -22,7 +22,7 @@ class DiceRoll:
 def get_num_dice(stat):
     num_dice = 1
     base = 110
-    while base < stat and num_dice < 8:
+    while base < stat and num_dice < 10:
         base += 10
         num_dice +=1
     return num_dice

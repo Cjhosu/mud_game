@@ -19,8 +19,8 @@ class CombatHandler():
             "bow" : "dex",
             "staff" : "magic"
             }
-        #If you have an equipped weapon attack with it...
 
+    #If you have an equipped weapon attack with it...
     def init_combat(self, caller, target):
         attack_weapon = self.get_attack_weapon(caller)
         attack_attr =  self.get_attack_attribute()
@@ -38,11 +38,14 @@ class CombatHandler():
                 #What attribute do you use to attack?
                 resolve = self.resolve_attack(defense_score, attack_score, attack_weapon, target)
                 dealt_damage = resolve[0]
+                if dealt_damage != None and dealt_damage > 0:
+                    target.db.health -= dealt_damage
                 damage_msg = resolve[1]
                 caller.location.msg_contents(damage_msg)
 
         else:
             caller.msg("You test your might... You attack the air with " + str(attack_weapon) +" for an attack score of " + str(attack_score))
+
 
     def get_attack_weapon(self, caller):
         is_equipped = equipped_check(self.caller, "weapon")
@@ -63,8 +66,8 @@ class CombatHandler():
             attack_attr = self.charclass_attack_attr_dict[charclass]
             return attack_attr
 
+    #Your weapon will do more for you if you know how to use it
     def weapon_multiplier(self,weapon, attack_attr):
-        #Your weapon will do more for you if you know how to use it
         caller=self.caller
         multiplier = round(weapon.db.damage * (random.uniform(1.25,1.85)))
         if self.weapon_attack_attr_dict[weapon.db.weapon_type] == attack_attr:
@@ -76,12 +79,18 @@ class CombatHandler():
     def get_attack_score(self, weapon, attack_attr):
         caller = self.caller
         attr_val = caller.attributes.get(attack_attr)
+
         #Knowing your attack attribute and the weapon equipped, find if it has a buff
         if weapon == "your fists":
             attack_score = caller.db.strength
         else:
             multiplier = self.weapon_multiplier(weapon, attack_attr)
             attack_score = attr_val + multiplier
+        stance = self.caller.db.stance
+
+        # If your stance is set to aggressive you gain a 10% attack advantage pre-all other buffs
+        if stance == "aggressive":
+            attack_score *= (1.1)
         return attack_score
 
     def get_defense_score(self, target):
@@ -96,7 +105,10 @@ class CombatHandler():
         return defense_score
 
     def resolve_attack(self, defense_score, attack_score, attack_weapon, target):
+
         dealt_damage = attack_score - defense_score
+
+        # If your stance is evasive or defensive you have a chance to avoid damage
         stance = target.db.stance
         if stance in ("evasive", "defensive"):
             if stance == "evasive":
@@ -109,7 +121,6 @@ class CombatHandler():
             num_dice = get_num_dice(stat) or 1
             dice = DiceRoll(num_dice, pass_cond = [1])
             passed = dice.roll()[1]
-            self.caller.msg(passed)
 
             if passed == True and stance == "evasive":
                 dealt_damage = None
