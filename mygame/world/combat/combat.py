@@ -132,8 +132,8 @@ class CombatHandler():
                 dealt_damage = None
                 message = str(target) + " blocks and takes no damage!"
         if dealt_damage != None and dealt_damage > 0:
+            xp = XP(self.caller, 30)
             message = str(self.caller) + " attacked "+ str(target) + " for " + str(dealt_damage) + " with "+str(attack_weapon)
-            xp = XP(self.caller, 3)
 
         elif dealt_damage != None and dealt_damage <= 0:
             message = str(target) + " shrugs off an attack from " + str(self.caller)
