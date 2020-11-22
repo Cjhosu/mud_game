@@ -32,6 +32,11 @@ class Command(BaseCommand):
             every command, like prompts.
 
     """
+    def at_post_cmd(self):
+        super().at_post_cmd()
+        caller = self.caller
+        prompt = "HP:%i/%i  XP:%i/%i" % (caller.db.health, caller.db.max_health, caller.db.xp, caller.db.next_level_xp)
+        caller.msg(prompt=prompt)
 
     pass
 

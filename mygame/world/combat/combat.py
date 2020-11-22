@@ -1,4 +1,6 @@
 from world.helpers import equipped_check, get_num_dice, DiceRoll
+from world.rules.levels import XP
+from world.combat.death import Death
 import random
 
 class CombatHandler():
@@ -42,10 +44,11 @@ class CombatHandler():
                     target.db.health -= dealt_damage
                 damage_msg = resolve[1]
                 caller.location.msg_contents(damage_msg)
+                if target.db.health <= 0:
+                    dead = Death(target)
 
         else:
             caller.msg("You test your might... You attack the air with " + str(attack_weapon) +" for an attack score of " + str(attack_score))
-
 
     def get_attack_weapon(self, caller):
         is_equipped = equipped_check(self.caller, "weapon")
@@ -130,6 +133,8 @@ class CombatHandler():
                 message = str(target) + " blocks and takes no damage!"
         if dealt_damage != None and dealt_damage > 0:
             message = str(self.caller) + " attacked "+ str(target) + " for " + str(dealt_damage) + " with "+str(attack_weapon)
+            xp = XP(self.caller, 3)
+
         elif dealt_damage != None and dealt_damage <= 0:
             message = str(target) + " shrugs off an attack from " + str(self.caller)
         return dealt_damage, message

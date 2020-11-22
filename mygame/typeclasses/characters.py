@@ -38,9 +38,12 @@ class Character(DefaultCharacter):
         self.db.dex = 100
         self.db.intel = 100
         self.db.luck = 100
-        self.db.health = 100
         self.db.defense = 100
-    pass
+        self.db.health = 255
+        self.db.max_health = 255
+        self.db.level = 1
+        self.db.xp = 0
+        self.db.next_level_xp = 100
 
 
 class NPC(Character):
