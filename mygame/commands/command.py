@@ -217,10 +217,11 @@ class CmdShowAttr(Command):
         magic = round(caller.db.magic)
         strength = round(caller.db.strength)
         dex = round(caller.db.dex)
+        attr_points = caller.db.attr_points
 
         table = evtable.EvTable("Attribute", "Value",
-                table = [["charclass", "defense","health","intel","luck", "magic","dex", "strength"],
-                [charclass, defense, health, intel, luck, magic, dex, strength]])
+                table = [["charclass", "defense","health","intel","luck", "magic","dex", "strength", "upgrade points"],
+                [charclass, defense, health, intel, luck, magic, dex, strength, attr_points]])
         caller.msg(table)
 
 class CmdSetStance(Command):

@@ -44,6 +44,7 @@ class Character(DefaultCharacter):
         self.db.level = 1
         self.db.xp = 0
         self.db.next_level_xp = 100
+        self.db.attr_points = 1
 
 
 class NPC(Character):

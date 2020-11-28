@@ -20,6 +20,7 @@ from commands import command
 from typeclasses import npcshop
 from evennia.commands.default import building
 from world import storynpcs
+from world.rules import levels
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -42,6 +43,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(npcshop.CmdBuildShop())
         self.add(command.CmdShowAttr())
         self.add(command.CmdSetStance())
+        self.add(levels.CmdLevelUp)
         super().at_cmdset_creation()
         #
         # any commands you add below will overload the default ones.
