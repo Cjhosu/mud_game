@@ -2,6 +2,7 @@ from evennia.utils import evmenu
 from evennia import Command, DefaultRoom, DefaultExit, DefaultObject
 from evennia.utils.create import create_object
 from evennia import CmdSet
+from typeclasses.rooms import Room
 
 def menunode_shopfront(caller):
 
@@ -29,7 +30,7 @@ def menunode_shopfront(caller):
     return text, options
 
 
-class NPCShop(DefaultRoom):
+class NPCShop(Room):
     def at_object_creation(self):
         self.cmdset.add_default(ShopCmdSet)
         self.db.storeroom = None
@@ -106,7 +107,7 @@ class CmdBuildShop(Command):
         shop = create_object(NPCShop,
                             key=shopname,
                               location=None)
-        storeroom = create_object(DefaultRoom,
+        storeroom = create_object(Room,
                                   key="%s-storage" % shopname,
                                   location=None)
         shop.db.storeroom = storeroom
