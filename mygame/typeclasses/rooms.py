@@ -1,12 +1,8 @@
 """
 Room
-
 Rooms are simple containers that has no location of their own.
-
 """
-
 from evennia import DefaultRoom, utils
-from commands.default_cmdsets import ChargenCmdset
 
 class Room(DefaultRoom):
     """
