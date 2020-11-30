@@ -46,6 +46,15 @@ class Character(DefaultCharacter):
         self.db.next_level_xp = 100
         self.db.attr_points = 1
 
+    def at_after_move(self, source_loaction):
+        """
+        The default of this function calls "look" when a character enter a room.
+        This is overwritten in the default room typeclass so look is always called 
+        before an NPC interaction is triggered.
+        """
+        #self.execute_cmd('look')
+        pass
+
 
 class NPC(Character):
 

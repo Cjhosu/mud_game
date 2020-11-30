@@ -5,7 +5,7 @@ Rooms are simple containers that has no location of their own.
 
 """
 
-from evennia import DefaultRoom
+from evennia import DefaultRoom, utils
 from commands.default_cmdsets import ChargenCmdset
 
 class Room(DefaultRoom):
@@ -18,6 +18,9 @@ class Room(DefaultRoom):
     See examples/object.py for a list of
     properties and methods available on all Objects.
     """
+    def at_object_receive(self, obj, source_location):
+        if not utils.inherits_from(obj, 'typeclasses.characters.NPC') and utils.inherits_from(obj, 'typeclasses.characters.Character'):
+            obj.execute_cmd('look')
 
     pass
 
@@ -34,4 +37,7 @@ class ChargenRoom(Room):
         text = super().return_appearance(looker)
         return text
         """
+
+class EnemyRoom(Room):
+    pass
 
