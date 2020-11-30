@@ -24,20 +24,6 @@ class Room(DefaultRoom):
 
     pass
 
-class ChargenRoom(Room):
-    #This room class is used by character-generation rooms.
-    #It makes the ChargenCmdSet available.
-
-    def at_object_creation(self):
-        "This is called only on creation"
-        self.cmdset.add(ChargenCmdset, permanent=True)
-"""
-    def return_appearance(self, looker):
-        The return from this method is what looker sees when looking at this object
-        text = super().return_appearance(looker)
-        return text
-        """
-
 class EnemyRoom(Room):
     pass
 

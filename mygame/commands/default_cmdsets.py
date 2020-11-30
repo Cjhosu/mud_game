@@ -109,12 +109,3 @@ class SessionCmdSet(default_cmds.SessionCmdSet):
         # any commands you add below will overload the default ones.
         #
 
-class ChargenCmdset(CmdSet):
-    # This cmdset is used in character generation areas.
-    key = "Chargen"
-    def at_cmdset_creation(self):
-        #This is called at initialization
-        pass
-
-
-
