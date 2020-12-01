@@ -1,3 +1,5 @@
+from evennia.utils import interactive
+
 """
 Characters
 
@@ -59,10 +61,14 @@ class Character(DefaultCharacter):
 class NPC(Character):
 
     def at_object_creation(self):
+        self.db.charclass = 'Warrior'
         super(NPC, self).at_object_creation()
 
+    @interactive
     def at_char_entered(self, character):
-        if self.db.is_aggressive:
-            self.execute_cmd(f"say Graaah, die {character}!")
+        if self.db.hostile:
+            character.location.msg_contents(str(self) +' is giving you some serious side-eye')
+            yield 20
+            self.execute_cmd(f"+attack {character}")
         else:
             self.execute_cmd(f"say Greetings, {character}!")

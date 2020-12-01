@@ -1,3 +1,4 @@
+from evennia import utils
 from world.helpers import equipped_check, get_num_dice, DiceRoll
 from world.rules.levels import XP
 from world.combat.death import Death
@@ -133,7 +134,9 @@ class CombatHandler():
                 message = str(target) + " blocks and takes no damage!"
         if dealt_damage != None and dealt_damage > 0:
             xp = XP(self.caller, 30)
-            message = str(self.caller) + " attacked "+ str(target) + " for " + str(dealt_damage) + " with "+str(attack_weapon)
+            message = str(self.caller) + " attacked "+ str(target) + " for " + str(dealt_damage)
+            if not utils.inherits_from(self.caller, 'typeclasses.characters.NPC'):
+                message += " with " + str(attack_weapon)
 
         elif dealt_damage != None and dealt_damage <= 0:
             message = str(target) + " shrugs off an attack from " + str(self.caller)
