@@ -28,7 +28,7 @@ def _deactivate(args):
 _deactivate(["nondestructive"])
 aliases["deactivate"] = _deactivate
 
-$VIRTUAL_ENV = r"/home/cjhosu/repos/mud_game/evenv"
+$VIRTUAL_ENV = r"/home/choward/repos/mud_game/evenv"
 
 $_OLD_VIRTUAL_PATH = $PATH
 $PATH = $PATH[:]

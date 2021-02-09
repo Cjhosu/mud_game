@@ -57,7 +57,7 @@ def menunode_inspect_and_buy(caller, raw_string):
                     (value, ware.key)
         caller.msg(rtext)
 
-    options = ({"desc": "Buy %s fro %s gold" %\
+    options = ({"desc": "Buy %s for %s gold" %\
                     (ware.key, ware.db.gold_value or 1),
                 "goto": "menunode_shopfront",
                 "exec": buy_ware_result},

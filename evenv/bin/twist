@@ -1,4 +1,4 @@
-#!/home/cjhosu/repos/mud_game/evenv/bin/python
+#!/home/choward/repos/mud_game/evenv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

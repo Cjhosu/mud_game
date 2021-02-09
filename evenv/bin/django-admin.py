@@ -1,4 +1,4 @@
-#!/home/cjhosu/repos/mud_game/evenv/bin/python
+#!/home/choward/repos/mud_game/evenv/bin/python
 from django.core import management
 
 if __name__ == "__main__":

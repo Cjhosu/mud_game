@@ -31,7 +31,7 @@ def info2(caller):
     return text, options
 
 def info3(caller):
-    text = "'If you head out the exit on the west side of the building and down the garden path you'll see Daryl's workshop.  He is awlays tinkering with something, and he usually has some things to sell.'"
+    text = "'If you head out the exit on the east side of the building and down the garden path you'll see Daryl's workshop.  He is awlays tinkering with something, and he usually has some things to sell.'"
 
     options = (
             {"desc" : "Great I'll visit Daryl now.", "goto" : "END"},
