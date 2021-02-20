@@ -1,7 +1,6 @@
 from evennia import utils
 from world.helpers import equipped_check, get_num_dice, DiceRoll
 from world.rules.levels import XP
-from world.combat.death import Death
 import random
 
 class CombatHandler():
@@ -46,7 +45,7 @@ class CombatHandler():
                 damage_msg = resolve[1]
                 caller.location.msg_contents(damage_msg)
                 if target.db.health <= 0:
-                    dead = Death(target)
+                    target.at_death() 
 
         else:
             caller.msg("You test your might... You attack the air with " + str(attack_weapon) +" for an attack score of " + str(attack_score))

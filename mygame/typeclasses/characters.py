@@ -57,6 +57,17 @@ class Character(DefaultCharacter):
         #self.execute_cmd('look')
         pass
 
+    @interactive
+    def at_death(self):
+        self.location.msg_contents(str(self)+ " has lost the will to live")
+        yield 3
+        self.msg("Re-spawning you somewhere cozy")
+        yield 2
+        self.msg("Try to stay alive.")
+        yield 2
+        self.move_to(self.home, quiet = True)
+        self.db.health = self.db.max_health
+
 
 class NPC(Character):
 
