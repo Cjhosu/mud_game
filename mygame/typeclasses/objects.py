@@ -196,11 +196,15 @@ class Gold(Object):
     	location = self.location)
     """
     
-    value = 1
-    
-    def at_get(self, getter):
+    def at_object_creation(self):
         gold_string = str(self).split(' ')
-        self.value = gold_string[0]
+        try:
+            self.value = gold_string[0]
+        except:
+            self.value = 1
+            
+        
+    def at_get(self, getter):
         getter.db.gold += int(self.value)
         self.delete()
         # rather than keeping the gold in an iinventory we add it to the characters gold attribute and destroy the object
