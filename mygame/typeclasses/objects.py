@@ -187,21 +187,21 @@ class Armor(Object):
                 dropper.db.slots["armor"] = None
 
 class Gold(Object):
-"""
-Gold objects should be created with the the value followed by the word 'gold'
-EX: 
-loot = create_object(
-        typeclass = 'typeclasses.objects.Gold',
-        key = '10 gold',
-        location = self.location)
-"""
-
-value = 1
-
-def at_get(self, getter):
-    gold_string = str(self).split(' ')
-    self.value = gold_string[0]
-    getter.db.gold += int(self.value)
-    self.delete()
-    # rather than keeping the gold in an iinventory we add it to the characters gold attribute and destroy the object
+    """
+    Gold objects should be created with the the value followed by the word 'gold'
+    EX: 
+    loot = create_object(
+    	typeclass = 'typeclasses.objects.Gold',
+    	key = '10 gold',
+    	location = self.location)
+    """
     
+    value = 1
+    
+    def at_get(self, getter):
+        gold_string = str(self).split(' ')
+        self.value = gold_string[0]
+        getter.db.gold += int(self.value)
+        self.delete()
+        # rather than keeping the gold in an iinventory we add it to the characters gold attribute and destroy the object
+        
