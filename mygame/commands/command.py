@@ -30,14 +30,11 @@ class Command(BaseCommand):
         - func(): Performs the actual work.
         - at_post_cmd(): Extra actions, often things done after
             every command, like prompts.
-
     """
     def at_post_cmd(self):
         super().at_post_cmd()
         caller = self.caller
-        prompt = "HP:%i/%i  Level:%i  XP:%i/%i" % (caller.db.health, caller.db.max_health, caller.db.level, caller.db.xp, caller.db.next_level_xp)
-        caller.msg(prompt=prompt)
-
+        display_prompt(caller)
     pass
 
 class CmdEquip(Command):
