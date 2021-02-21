@@ -17,7 +17,6 @@ class Room(DefaultRoom):
     def at_object_receive(self, obj, source_location):
         if not utils.inherits_from(obj, 'typeclasses.characters.NPC') and utils.inherits_from(obj, 'typeclasses.characters.Character'):
             obj.execute_cmd('look')
-
     pass
 
 class EnemyRoom(Room):
