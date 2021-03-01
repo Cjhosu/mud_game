@@ -68,13 +68,12 @@ class CmdCreateNPC(Command):
     create a new npc
 
     Usage:
-        +createNPC <name>
+        createNPC <name>
     """
 
-    key = "+createnpc"
-    aliases = ["+createNPC"]
+    key = "createnpc"
+    aliases = ["createNPC"]
     locks = "call:not perm(nopcs)"
-    help_category = "mush"
 
     def func(self):
         #creates an object and names it
@@ -104,15 +103,15 @@ class CmdEditNPC(Command):
       +editnpc <name>[/atribute> [=value]]
 
     Examples:
-    +editnpc mynpc/health = 5 - sets health to 5
-    +editnpc mynpc/health  - displays health value
-    +editnpc mynpc - displays attributes you can edit
+    editnpc mynpc/health = 5 - sets health to 5
+    editnpc mynpc/health  - displays health value
+    editnpc mynpc - displays attributes you can edit
 
     ths command edxits an existing NPC.  You must have permissions to edit this npc.
 
     """
-    key = "+editnpc"
-    aliases = ["+editNPC"]
+    key = "editnpc"
+    aliases = ["editNPC"]
     locks = "cmd:not perm(nonpcs)"
     help_category = "mush"
 
@@ -169,13 +168,13 @@ class CmdAttack(Command):
     """
     issues an attack
 
-    Usage: +attack
+    Usage: attack
 
     This will calculate a new combat score based on your Strength.
     Your combat score is visible to everyone in the same location
     """
 
-    key = "+attack"
+    key = "attack"
     help_category = "mush"
 
     def func(self):
@@ -229,14 +228,13 @@ class CmdSetStance(Command):
     sets the players stance to aggressive, defensive, or evasive
 
     Usage:
-      +set stance <stance option>
+      set stance <stance option>
 
     Examples:
-    +set stance evasive
+    set stance evasive
     """
 
-    key = '+set stance'
-    help_category = "mush"
+    key = "set stance"
 
     def func(self):
         caller = self.caller

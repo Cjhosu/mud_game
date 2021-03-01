@@ -198,13 +198,12 @@ class Gold(Object):
     """
     
     def at_object_creation(self):
-        gold_string = str(self).split(' ')
+        gold_string = self.key.split(' ')
         try:
             self.value = gold_string[0]
         except:
             self.value = 1
             
-        
     def at_get(self, getter):
         getter.db.gold += int(self.value)
         self.delete()

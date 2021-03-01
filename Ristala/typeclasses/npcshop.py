@@ -24,7 +24,7 @@ def menunode_shopfront(caller):
 
     for ware in wares:
         options.append({"desc": "%s (%s gold)" %
-                           (ware.key, ware.db.gold_value or 1),
+                           (ware.key, ware.db.value or 1),
                            "goto" : "menunode_inspect_and_buy"})
 
     return text, options
@@ -41,7 +41,7 @@ def menunode_inspect_and_buy(caller, raw_string):
     wares = [ware for ware in wares if ware.key.lower() != "door"]
     iware = int(raw_string) -1
     ware = wares[iware]
-    value = ware.db.gold_value or 1
+    value = ware.db.value or 1
     wealth = caller.db.gold or 0
     text = "You inspect %s:\n\n%s" % (ware.key, ware.db.desc)
 
@@ -58,7 +58,7 @@ def menunode_inspect_and_buy(caller, raw_string):
         caller.msg(rtext)
 
     options = ({"desc": "Buy %s fro %s gold" %\
-                    (ware.key, ware.db.gold_value or 1),
+                    (ware.key, ware.db.value or 1),
                 "goto": "menunode_shopfront",
                 "exec": buy_ware_result},
                  {"desc": "Look for something else",
