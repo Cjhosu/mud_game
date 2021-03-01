@@ -4,6 +4,7 @@ from evennia import Command as BaseCommand, DefaultRoom, DefaultExit, DefaultObj
 from evennia.utils.create import create_object
 from evennia.utils import evtable
 from typeclasses.characters import Character, NPC
+from typeclasses.objects import Potion
 from world.combat.combat import CombatHandler
 from world.helpers import display_prompt
 
@@ -251,3 +252,25 @@ class CmdSetStance(Command):
             caller.db.stance = args
             caller.msg("Your stance has been set to " + args)
 
+class CmdDrink(Command):
+
+    """
+    used to consume a potion
+
+    Usagae : drink <potion name>
+    """
+    key = "drink"
+    help_category = "mush"
+
+    def func(self):
+        caller = self.caller
+        if not self.args:
+            caller.msg("Drink what?")
+        else:
+            args = self.args.strip()
+            item = caller.search(args, candidates=caller.contents,nofound_string= args +" doesn't seem to be something you are carrying")
+            if item:
+                if item.is_typeclass('typeclasses.objects.Potion'):
+                    item.drink(caller)
+                else:
+                    caller.msg("That item is not drinkable")
