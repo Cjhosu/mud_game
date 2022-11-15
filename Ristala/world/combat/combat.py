@@ -77,9 +77,8 @@ class CombatHandler():
     #Your weapon will do more for you if you know how to use it
     def weapon_multiplier(self,weapon, attack_attr):
         caller=self.caller
-        multiplier = round(weapon.db.damage * (random.uniform(1.25,1.85)))
         if self.weapon_attack_attr_dict[weapon.db.weapon_type] == attack_attr:
-            multiplier
+            multiplier = round(weapon.db.damage * (random.uniform(1.30,1.90)))
         else:
             multiplier = weapon.db.damage
         return multiplier

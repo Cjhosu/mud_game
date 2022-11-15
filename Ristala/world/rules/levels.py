@@ -24,6 +24,7 @@ class XP:
     def level_up(self):
        self.target.db.level += 1
        self.target.location.msg_contents(str(self.target) +' has gained a level!')
+       self.target.db.attr_points += 1
 
 class CmdLevelUp(Command):
     """
