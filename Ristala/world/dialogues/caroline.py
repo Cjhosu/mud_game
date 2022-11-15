@@ -72,7 +72,7 @@ def info4(caller):
 
     return text, options
 
-def set_char_class(caller, raw_string, **kwargs):
+def set_char_class(caller, **kwargs):
     attrname = kwargs.get("attr")
     caller.at_object_creation()
     caller.db.charclass = attrname

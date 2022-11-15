@@ -21,6 +21,11 @@ class CombatHandler():
             "bow" : "dex",
             "staff" : "magic"
             }
+    magic_attack_strings = [
+            " bends the fabric of the universe to attack ",
+            " summons a bolt of eldrich energy attacking ",
+            " taps into an unseen well of magic sending a wave of destruction at "
+            ]
 
     #If you have an equipped weapon attack with it...
     def init_combat(self, caller, target):
@@ -107,12 +112,16 @@ class CombatHandler():
         defense_score = target.db.defense + defense_bonus
         return defense_score
 
-    def resolve_attack(self, defense_score, attack_score, attack_weapon, target):
+    def resolve_attack(self, defense_score, attack_score, weapon, target):
 
         dealt_damage = attack_score - defense_score
 
         # If your stance is evasive or defensive you have a chance to avoid damage
         stance = target.db.stance
+        try:
+            weapon_type = self.weapon_attack_attr_dict[weapon.db.weapon_type]
+        except: 
+            weapon_type = None
         if stance in ("evasive", "defensive"):
             if stance == "evasive":
                 dex = target.db.dex
@@ -133,9 +142,15 @@ class CombatHandler():
                 message = str(target) + " blocks and takes no damage!"
         if dealt_damage != None and dealt_damage > 0:
             xp = XP(self.caller, 30)
-            message = str(self.caller) + " attacked "+ str(target) + " for " + str(dealt_damage)
+
+            if weapon_type != None and weapon_type == "magic":
+                message = str(self.caller) + random.choice(self.magic_attack_strings) + str(target) + " for " + str(dealt_damage) + " damage"
+            else:
+                message = str(self.caller) + " attacked "+ str(target) + " for " + str(dealt_damage)
             if not utils.inherits_from(self.caller, 'typeclasses.characters.NPC'):
-                message += " with " + str(attack_weapon)
+                message += " with " + str(weapon)
+            else:
+                message
 
         elif dealt_damage != None and dealt_damage <= 0:
             message = str(target) + " shrugs off an attack from " + str(self.caller)
