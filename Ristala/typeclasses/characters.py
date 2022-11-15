@@ -113,7 +113,7 @@ class NPC(Character):
                 key = str(number) +' gold',
                 location = self.location)
 
-        loot.attributes.add('value', number)
+        loot.db.value = number
         self.location.msg_contents(str(self)+ " dropped " + str(loot))
 
         "Take the enemy out of play for 60 seconds"

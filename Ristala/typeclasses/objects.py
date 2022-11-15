@@ -200,12 +200,12 @@ class Gold(Object):
     def at_object_creation(self):
         gold_string = self.key.split(' ')
         try:
-            self.value = gold_string[0]
+            self.db.value = gold_string[0]
         except:
-            self.value = 1
+            self.db.value = 1
             
     def at_get(self, getter):
-        getter.db.gold += int(self.value)
+        getter.db.gold += int(self.db.value)
         self.delete()
         # rather than keeping the gold in an iinventory we add it to the characters gold attribute and destroy the object
         
