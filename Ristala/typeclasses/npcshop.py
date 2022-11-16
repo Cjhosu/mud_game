@@ -45,30 +45,33 @@ def menunode_inspect_and_buy(caller, raw_string):
     wealth = caller.db.gold or 0
     text = "You inspect %s:\n\n%s" % (ware.key, ware.db.desc)
 
-    def buy_ware_result(caller):
-
-        if wealth >= value:
-            rtext = "you pay %i gold and purchase %s!" % \
-                           (value, ware.key)
-            caller.db.gold -= value
-            ware.move_to(caller, quiet = True)
-        else:
-            rtext = "You cannot afford %i gold for %s!" % \
-                    (value, ware.key)
-        caller.msg(rtext)
-
-    options = ({"desc": "Buy %s fro %s gold" %\
-                    (ware.key, ware.db.value or 1),
-                "goto": "menunode_shopfront",
-                "exec": buy_ware_result},
-                 {"desc": "Look for something else",
-                   "goto": "menunode_shopfront"})
+    options = ({"desc": "Buy %s for %s gold" %\
+                (ware.key, ware.db.value or 1),
+                "exec": ("buy_ware_result", {"wealth" : wealth, "value" : value, "ware" : ware}),
+                "goto": "menunode_shopfront"},
+                {"desc": "Look for something else",
+                "goto": "menunode_shopfront"})
 
     return text, options
 
+def buy_ware_result(caller, **kwargs):
+
+    wealth = kwargs.get("wealth")
+    value = kwargs.get("value")
+    ware = kwargs.get("ware")
+    if wealth >= value:
+        rtext = "you pay %i gold and purchase %s!" % \
+                       (value, ware.key)
+        caller.db.gold -= value
+        ware.move_to(caller, quiet = True)
+    else:
+        rtext = "You cannot afford %i gold for %s!" % \
+                (value, ware.key)
+    caller.msg(rtext)
+
 class CmdBuy(Command):
-    key = "buy"
-    aliases = ("shop", "kaufen")
+    key = "shop"
+    aliases = ("buy","sell", "kaufen")
 
     def func(self):
         evmenu.EvMenu(self.caller, "typeclasses.npcshop", startnode="menunode_shopfront")

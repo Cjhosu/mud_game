@@ -45,21 +45,24 @@ class CombatHandler():
                 #What attribute do you use to attack?
                 resolve = self.resolve_attack(defense_score, attack_score, attack_weapon, target)
                 dealt_damage = resolve[0]
-                if dealt_damage != None and dealt_damage > 0:
-                    target.db.health -= dealt_damage
                 damage_msg = resolve[1]
                 caller.location.msg_contents(damage_msg)
+                if dealt_damage != None and dealt_damage > 0:
+                    target.db.health -= dealt_damage
                 if target.db.health <= 0:
                     target.at_death()
 
         else:
             caller.msg("You test your might... You attack the air with " + str(attack_weapon) +" for an attack score of " + str(attack_score))
 
-    def get_attack_weapon(self, caller):
+    def weapon_is_equipped(self, caller):
         is_equipped = equipped_check(self.caller, "weapon")
-        if is_equipped[0] == True:
-            slots = caller.db.slots
-            attack_weapon = slots["weapon"]
+        return is_equipped[0]
+
+    def get_attack_weapon(self, caller):
+        if self.weapon_is_equipped(caller):
+            #slots = caller.db.slots
+            attack_weapon = caller.db.slots["weapon"]
         else:
             attack_weapon = "your fists" 
         return attack_weapon
