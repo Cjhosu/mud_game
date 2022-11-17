@@ -270,5 +270,5 @@ class AttrModHandler:
             else:
                 curval = caller.attributes.get(self.stat)
                 caller.attributes.add(self.stat, curval + (curval * self.mod))
-                yield 120
+                yield 300
                 caller.attributes.add(self.stat, curval)
