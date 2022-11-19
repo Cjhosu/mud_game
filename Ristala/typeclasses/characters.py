@@ -118,7 +118,7 @@ class NPC(Character):
 
         "Take the enemy out of play for 60 seconds"
         self.move_to(None, to_none = True)
-        yield 30
+        yield 60
 
         "Re-spawn them"
         self.move_to(self.home, quiet = True)
