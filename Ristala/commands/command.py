@@ -51,7 +51,7 @@ class CmdEquip(Command):
             caller.msg("You have "+ str(slots)+ " equipped")
         else:
             args = self.args.strip()
-            item = caller.search(args, candidates=caller.contents,nofound_string= args +" doesn't seem to be something you are carrying")
+            item = caller.search(args, nofound_string= args +" doesn't seem to be something you are carrying")
             if item:
                 if item.is_typeclass('typeclasses.objects.Weapon'):
                     slots["weapon"] = item
@@ -266,7 +266,7 @@ class CmdDrink(Command):
             caller.msg("Drink what?")
         else:
             args = self.args.strip()
-            item = caller.search(args, candidates=caller.contents,nofound_string= args +" doesn't seem to be something you are carrying")
+            item = caller.search(args, nofound_string= args +" doesn't seem to be something you are carrying")
             if item:
                 if item.is_typeclass('typeclasses.objects.Potion'):
                     item.drink(caller)
