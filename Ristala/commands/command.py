@@ -222,6 +222,38 @@ class CmdShowAttr(Command):
                 [charclass, defense, health, intel, luck, magic, dex, strength, attr_points]])
         caller.msg(table)
 
+class CmdCastSpell(Command):
+
+    """
+    casts a spell of your choosing
+
+    Usage:
+      cast <spell name> at/on <target(s)>
+
+    Examples:
+      cast magic missle at Dave
+    """
+
+    key = "cast"
+
+    def parse(self):
+        "We need to do some parsing here"
+        args = self.args
+        spell_name, target_list = None, None
+        if "on" in agrs:
+            spell_name, target_list = [part.strip() for part in args.split("on",1)]
+        elif "at" in args:
+            spell_name, target_list = [part.strip() for part in args.split("at",1)]
+        else:
+            spell_name = args
+        # store, so we can access it below in sie func()
+        self.target_list = target_list
+        self.spell_name = spell_name
+        pass
+
+    def func(slef):
+        pass
+
 class CmdSetStance(Command):
 
     """
