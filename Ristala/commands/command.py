@@ -6,6 +6,7 @@ from evennia.utils import evtable
 from typeclasses.characters import Character, NPC
 from typeclasses.objects import Potion
 from world.combat.combat import CombatHandler
+from world.spells.spell_handler import SpellHandler
 from world.helpers import display_prompt
 
 """
@@ -240,7 +241,7 @@ class CmdCastSpell(Command):
         "We need to do some parsing here"
         args = self.args
         spell_name, target_list = None, None
-        if "on" in agrs:
+        if "on" in args:
             spell_name, target_list = [part.strip() for part in args.split("on",1)]
         elif "at" in args:
             spell_name, target_list = [part.strip() for part in args.split("at",1)]
@@ -251,8 +252,13 @@ class CmdCastSpell(Command):
         self.spell_name = spell_name
         pass
 
-    def func(slef):
-        pass
+    def func(self):
+        caller = self.caller
+        spell_name = self.spell_name
+        target_list = self.target_list
+        spl = SpellHandler(caller, spell_name, target_list)
+        spl.init_spell(caller, spell_name, target_list)
+
 
 class CmdSetStance(Command):
 

@@ -36,6 +36,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         Populates the cmdset
         """
         self.add(command.CmdAttack())
+        self.add(command.CmdCastSpell())
         self.add(command.CmdCreateNPC())
         self.add(command.CmdEditNPC())
         self.add(command.CmdEquip())
