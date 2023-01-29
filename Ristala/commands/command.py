@@ -232,7 +232,7 @@ class CmdCastSpell(Command):
       cast <spell name> at/on <target(s)>
 
     Examples:
-      cast magic missle at Dave
+      cast magic missile at Dave
     """
 
     key = "cast"
@@ -250,14 +250,13 @@ class CmdCastSpell(Command):
         # store, so we can access it below in sie func()
         self.target_list = target_list
         self.spell_name = spell_name
-        pass
 
     def func(self):
         caller = self.caller
         spell_name = self.spell_name
         target_list = self.target_list
         spl = SpellHandler(caller, spell_name, target_list)
-        spl.init_spell(caller, spell_name, target_list)
+        spl.init_spell()
 
 
 class CmdSetStance(Command):

@@ -10,6 +10,5 @@ class SpellHandler():
         self.spell_name = spell_name
         self.target_list = target_list
 
-    def init_spell(self, caller, spell_name, target_list):
-        spell_name = self.spell_name
-        caller.msg("You've cast " + str(spell_name) +"(" + str(target_list) + ")" )
+    def init_spell(self):
+        self.caller.msg("You've cast " + str(self.spell_name) +"(" + str(self.target_list) + ")" )
