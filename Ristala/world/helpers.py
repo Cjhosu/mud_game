@@ -76,7 +76,20 @@ def display_prompt(caller):
     else:
         gold = caller.db.gold
 
-    prompt = "HP:%i/%i  Level:%i  XP:%i/%i  Gold:%i" % (health, max_health, level, xp, next_level_xp, gold)
+    if not caller.db.mana:
+        mana = 0
+    else:
+        mana = caller.db.mana
+
+    if not caller.db.max_mana:
+        max_mana = 0
+    else:
+        max_mana = caller.db.max_mana
+
+    if caller.db.charclass in ["Mage", "Druid"]:
+        prompt = "HP:%i/%i Mana:%i/%i Level:%i  XP:%i/%i  Gold:%i" % (health, max_health, mana, max_mana, level, xp, next_level_xp, gold)
+    else:
+        prompt = "HP:%i/%i  Level:%i  XP:%i/%i  Gold:%i" % (health, max_health, level, xp, next_level_xp, gold)
     caller.msg(prompt=prompt)
 
 def drop_gold_pieces():

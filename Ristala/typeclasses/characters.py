@@ -51,9 +51,17 @@ class Character(DefaultCharacter):
         self.db.attr_points = 1
         self.db.gold = 0
         TICKER_HANDLER.add(10, self.at_prompt)
+        TICKER_HANDLER.add(15, self.mana_increment)
 
     def at_prompt(self):
         display_prompt(self)
+
+    def mana_increment(self):
+        caller.msg("message")
+        if self.db.max_mana and self.db.mana < self.db.max_mana:
+            self.db.mana += 1
+        else:
+            self.db.mana = 44
 
     def at_after_move(self, source_loaction):
         """

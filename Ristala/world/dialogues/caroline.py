@@ -102,6 +102,8 @@ def Mage(caller):
     caller.db.dex *= .75
     caller.db.intel *= 1.0
     caller.db.luck *= 1.1
+    caller.db.mana = 0
+    caller.db.max_mana = 100
     caller.msg("\n Spells for days son!")
     return
 
@@ -111,6 +113,8 @@ def Druid(caller):
     caller.db.dex *= 1.05
     caller.db.intel *= 1.05
     caller.db.luck *= .90
+    caller.db.mana = 0
+    caller.db.max_mana = 70
     caller.msg("\n Ah, Blessed be")
     return
 
