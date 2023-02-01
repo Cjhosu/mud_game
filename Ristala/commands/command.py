@@ -6,7 +6,7 @@ from evennia.utils import evtable
 from typeclasses.characters import Character, NPC
 from typeclasses.objects import Potion
 from world.combat.combat import CombatHandler
-from world.spells.spell_handler import SpellHandler
+from world.magic.spell_handler import SpellHandler
 from world.helpers import display_prompt
 
 """
