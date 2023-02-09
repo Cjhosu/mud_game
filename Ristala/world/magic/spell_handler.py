@@ -15,27 +15,42 @@ class SpellHandler():
                 spell_data = SpellFactory(spell_name)
                 cls, cost = spell_data.get_spell_data()[0:2]
                 spell = cls(self.caller, self.spell_name, self.target_list)
-                self.caller.msg("The current mana_level is " + str(self.caller.db.mana) + " the cost to cast is " + str(cost))
-                spell.action()
+                if self.resolve_mana(cost):
+                    spell.action()
             except:
                 self.no_spell()
 
     def no_spell(self):
         self.caller.msg("That doesn't seem to be a real spell")
 
+    def resolve_mana(self, cost):
+        self.mana_cost = cost
+        if self.mana_cost <= self.caller.db.mana:
+            self.caller.db.mana -= self.mana_cost
+            return True
+        else:
+            self.caller.msg("You don't have enough mana to do that")
+            self.caller.msg("The current mana_level is " + str(self.caller.db.mana) + " the cost to cast is " + str(self.cost))
+            return False
+
 class SpellFactory():
-    spell_data = {
+    spell_data_dict = {
             "shield" : ["Shield", 35],
-            "magic missile" : ["MagicMissile", 25]
+            "magic missile" : ["MagicMissile", 25],
+            "firebolt" : ["Firebolt", 20]
         }
 
     def __init__(self, spell_name):
         self.spell_name = spell_name
 
     def get_spell_data(self):
-        cls = globals()[self.spell_data[self.spell_name][0]]
-        self.mana_cost = self.spell_data[self.spell_name][1]
+        cls = globals()[self.spell_data_dict[self.spell_name][0]]
+        self.mana_cost = self.spell_data_dict[self.spell_name][1]
         return (cls, self.mana_cost)
+
+class Firebolt(SpellHandler):
+    def action(self):
+        self.caller.msg("You've cast " + str(self.spell_name) +"(" + str(self.target_list) + ")" )
 
 class Shield(SpellHandler):
     def action(self):
