@@ -15,13 +15,23 @@ class SpellHandler():
                 spell_data = SpellFactory(spell_name)
                 cls, cost = spell_data.get_spell_data()[0:2]
                 spell = cls(self.caller, self.spell_name, self.target_list)
-                self.caller.msg("The current mana_level is " + str(self.caller.db.mana) + " the cost to cast is " + str(cost))
-                spell.action()
+                if self.resolve_mana(cost):
+                    spell.action()
             except:
                 self.no_spell()
 
     def no_spell(self):
         self.caller.msg("That doesn't seem to be a real spell")
+
+    def resolve_mana(self, cost):
+        self.mana_cost = cost
+        if self.mana_cost <= self.caller.db.mana:
+            self.caller.db.mana -= self.mana_cost
+            return True
+        else:
+            self.caller.msg("You don't have enough mana to do that")
+            self.caller.msg("The current mana_level is " + str(self.caller.db.mana) + " the cost to cast is " + str(cost))
+            return False
 
 class SpellFactory():
     spell_data = {
