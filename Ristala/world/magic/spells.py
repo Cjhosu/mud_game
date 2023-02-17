@@ -5,11 +5,12 @@ class Spell():
         self.caller = caller
         self.spell_name = spell_name.strip()
         self.target_list = target_list or self.caller
+        self.mana_cost = 0
 
     def has_enough_mana(self):
-        try:
+        if self.mana_cost >= 0:
             return self.mana_cost <= self.caller.db.mana
-        except:
+        else:
             return True
 
     def action(self):
@@ -17,7 +18,9 @@ class Spell():
 
 class Firebolt(Spell):
 
-    mana_cost = 25
+    def __init__(self, caller, spell_name, target_list):
+        super().__init__(caller, spell_name, target_list)
+        self.mana_cost = 25
 
     def action(self):
         self.caller.db.mana -= self.mana_cost
@@ -25,7 +28,9 @@ class Firebolt(Spell):
 
 class Shield(Spell):
 
-    mana_cost = 30
+    def __init__(self, caller, spell_name, target_list):
+        super().__init__(caller, spell_name, target_list)
+        self.mana_cost = 30
 
     def action(self):
         self.caller.db.mana -= self.mana_cost
@@ -33,7 +38,9 @@ class Shield(Spell):
 
 class MagicMissile(Spell):
 
-    mana_cost = 35
+    def __init__(self, caller, spell_name, target_list):
+        super().__init__(caller, spell_name, target_list)
+        self.mana_cost = 35
 
     def action(self):
         self.caller.db.mana -= self.mana_cost
