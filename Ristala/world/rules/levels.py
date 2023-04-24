@@ -1,8 +1,9 @@
 from evennia import Command
 from evennia.utils import evmenu
 
+
 class XP:
-    def  __init__(self,target, xp_val):
+    def __init__(self, target, xp_val):
         self.xp_val = xp_val
         self.target = target
         self.add()
@@ -10,7 +11,7 @@ class XP:
     def add(self):
         target = self.target
         target.db.xp += self.xp_val
-        self.check_level(target.db.xp ,target.db.next_level_xp)
+        self.check_level(target.db.xp, target.db.next_level_xp)
 
     def check_level(self, xp, next_level_xp):
         target = self.target
@@ -22,9 +23,10 @@ class XP:
             self.check_level(target.db.xp, target.db.next_level_xp)
 
     def level_up(self):
-       self.target.db.level += 1
-       self.target.location.msg_contents(str(self.target) +' has gained a level!')
-       self.target.db.attr_points += 1
+        self.target.db.level += 1
+        self.target.location.msg_contents(str(self.target) + ' has gained a level!')
+        self.target.db.attr_points += 1
+
 
 class CmdLevelUp(Command):
     """
@@ -44,12 +46,16 @@ def spend_points(caller):
 
     attr_points = caller.db.attr_points
     if attr_points > 0:
-        text = "You have "+ str(attr_points) + " upgrade point(s) to spend. \n You can spend them on leveling your attributes.\n Pick one to upgrade!"
+        text = (
+                "You have " + str(attr_points) +
+                " upgrade point(s) to spend. \n You can spend them on leveling your attributes.\n Pick one to upgrade!"
+                )
         options = ({"key": "_default", "goto": "parse_node"})
     else:
         text = "No points to spend"
         options = []
     return text, options
+
 
 def parse_node(caller, raw_string):
     if (raw_string) in ["strength", "dex", "magic", "defense", "health", "intel", "luck"]:
@@ -60,5 +66,7 @@ def parse_node(caller, raw_string):
         if raw_string == "health":
             caller.db.max_health += 1
     else:
-        caller.msg("You tried to upgrade "+ str(raw_string) +" instead choose strength, dex, magic, defense, health, intel, or luck")
+        caller.msg("You tried to upgrade " +
+                   str(raw_string) +
+                   " instead choose strength, dex, magic, defense, health, intel, or luck")
     return spend_points(caller)
