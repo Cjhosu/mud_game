@@ -11,11 +11,10 @@ class SpellHandler():
         spell_name = self.spell_name.lower()
         if spell_name == None:
             spell_name == ''
-        spell = SpellFactory()
-        spell_instc = spell.get_spell_instc(self.caller, spell_name, self.target_list)
-        if spell_instc.has_enough_mana():
-            spell_instc.action()
+        spell = SpellFactory.get_spell_instc(self.caller, spell_name, self.target_list)
+        if spell.has_enough_mana():
+            spell.action()
         else:
             self.caller.msg("You don't have enough mana to do that")
-            self.caller.msg("The current mana level is " + str(self.caller.db.mana) + " the cost to cast is " + str(spell_instc.mana_cost))
+            self.caller.msg("The current mana level is " + str(self.caller.db.mana) + " the cost to cast is " + str(spell.mana_cost))
 
