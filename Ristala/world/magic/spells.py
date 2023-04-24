@@ -16,6 +16,7 @@ class Spell():
     def action(self):
         self.caller.msg("Check the spellbook again, " + str(self.spell_name) + " doesn't seem to be a spell")
 
+
 class Firebolt(Spell):
 
     def __init__(self, caller, spell_name, target_list):
@@ -24,7 +25,8 @@ class Firebolt(Spell):
 
     def action(self):
         self.caller.db.mana -= self.mana_cost
-        self.caller.msg("You've cast " + str(self.spell_name) +"(" + str(self.target_list) + ")" )
+        self.caller.msg("You've cast " + str(self.spell_name) + "(" + str(self.target_list) + ")")
+
 
 class Shield(Spell):
 
@@ -34,7 +36,8 @@ class Shield(Spell):
 
     def action(self):
         self.caller.db.mana -= self.mana_cost
-        self.caller.msg("You've cast " + str(self.spell_name) +"(" + str(self.target_list) + ")" )
+        self.caller.msg("You've cast " + str(self.spell_name) + "(" + str(self.target_list) + ")")
+
 
 class MagicMissile(Spell):
 
@@ -44,4 +47,4 @@ class MagicMissile(Spell):
 
     def action(self):
         self.caller.db.mana -= self.mana_cost
-        self.caller.msg("You've cast " + str(self.spell_name) +"(" + str(self.target_list) + ")" )
+        self.caller.msg("You've cast " + str(self.spell_name) + "(" + str(self.target_list) + ")")
