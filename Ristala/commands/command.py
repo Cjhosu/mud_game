@@ -1,10 +1,7 @@
-import evennia
 import time
-from evennia import Command as BaseCommand, DefaultRoom, DefaultExit, DefaultObject
+from evennia import Command as BaseCommand
 from evennia.utils.create import create_object
 from evennia.utils import evtable
-from typeclasses.characters import Character, NPC
-from typeclasses.objects import Potion
 from world.combat.combat import CombatHandler
 from world.magic.spell_handler import SpellHandler
 from world.helpers import display_prompt
@@ -15,6 +12,8 @@ Commands
 Commands describe the input the account can do to the game.
 
 """
+
+
 class Command(BaseCommand):
     """
     Inherit from this if you want to create your own command styles
@@ -40,26 +39,29 @@ class Command(BaseCommand):
         display_prompt(caller)
     pass
 
+
 class CmdEquip(Command):
     key = "equip"
 
     def func(self):
         caller = self.caller
         if not caller.db.slots:
-            caller.db.slots = {"armor" : None, "weapon":None }
+            caller.db.slots = {"armor": None, "weapon": None}
         slots = caller.db.slots
         if not self.args:
-            caller.msg("You have "+ str(slots)+ " equipped")
+            caller.msg("You have " + str(slots) + " equipped")
         else:
             args = self.args.strip()
-            item = caller.search(args, nofound_string= args +" doesn't seem to be something you are carrying")
+            item = caller.search(args, nofound_string=args + " doesn't seem to be something you are carrying")
             if item:
                 if item.is_typeclass('typeclasses.objects.Weapon'):
                     slots["weapon"] = item
-                    caller.msg("You have equipped "+ str(item) +" to your weapon slot, it has a damage value of " + str(item.db.damage))
+                    caller.msg("You have equipped " + str(item) +
+                               " to your weapon slot, it has a damage value of " + str(item.db.damage))
                 elif item.is_typeclass('typeclasses.objects.Armor'):
                     slots["armor"] = item
-                    caller.msg("You have equipped " + str(item) + " to your armor slot it has a defense bonus of " + str(item.db.defense_bonus))
+                    caller.msg("You have equipped " + str(item) +
+                               " to your armor slot it has a defense bonus of " + str(item.db.defense_bonus))
                 else:
                     caller.msg("That item is not equipable")
 
@@ -77,24 +79,25 @@ class CmdCreateNPC(Command):
     locks = "call:not perm(nopcs)"
 
     def func(self):
-        #creates an object and names it
+        # creates an object and names it
         caller = self.caller
         if not self.args:
             caller.msg("Usage: +createNPC <name>")
             return
         if not caller.location:
-            #you can't create a npc if you are out of character
+            # you can't create a npc if you are out of character
             caller.msg("You must have a location to create an npc")
             return
         name = self.args.strip().capitalize()
         npc = create_object("characters.NPC",
-                             key=name,
-                             location=caller.location,
-                             locks="edit:id(%i) and perm(Builders);call:false()" % caller.id)
-        #announce
+                            key=name,
+                            location=caller.location,
+                            locks="edit:id(%i) and perm(Builders);call:false()" % caller.id)
+        # announce
         message = "%s created the NPC '%s'."
-        caller.msg(message % ("You", name))
+        caller.msg(message % ("You", npc.key))
         caller.location.msg_contents(message % (caller.key, name), exclude=caller)
+
 
 class CmdEditNPC(Command):
     """
@@ -121,7 +124,7 @@ class CmdEditNPC(Command):
         args = self.args
         propname, propval = None, None
         if "=" in args:
-            args, propval = [part.strip() for part in args.rsplit("=",1)]
+            args, propval = [part.strip() for part in args.rsplit("=", 1)]
         if "/" in args:
             args, propname = [part.strip() for part in args.rsplit("/", 1)]
         # store, so we can access it below in sie func()
@@ -144,7 +147,7 @@ class CmdEditNPC(Command):
             if not npc.access(caller, "edit"):
                 caller.msg("You cannot change this NPC")
                 return
-        except:
+        except Exception:
             caller.msg("Who dat?")
             return
         if not self.propname:
@@ -160,10 +163,12 @@ class CmdEditNPC(Command):
             # in this example, the properties are all integers...
             intpropval = int(self.propval)
             npc.attributes.add(self.propname, intpropval)
-            caller.msg(f"You've set {npc.key}'s {self.propname} property to {npc.attributes.get(self.propname, default = 'N/A')}")
+            caller.msg(f"You've set {npc.key}'s {self.propname} property to " +
+                       "{npc.attributes.get(self.propname, default = 'N/A')}")
         else:
             # propname set, but not propval - show the current value
             caller.msg(f"{npc.key} has property {self.propname} = {npc.attributes.get(self.propname, default = 'N/A')}")
+
 
 class CmdAttack(Command):
     """
@@ -181,7 +186,7 @@ class CmdAttack(Command):
     def func(self):
         caller = self.caller
         now = time.time()
-        if hasattr(self, "lastattack") and now - self.lastattack < 5 :
+        if hasattr(self, "lastattack") and now - self.lastattack < 5:
             caller.msg("Your attack is on cooldown")
             return
         cmbt = CombatHandler()
@@ -194,6 +199,7 @@ class CmdAttack(Command):
         cmbt.caller = caller
         cmbt.init_combat(caller, target)
         self.lastattack = now
+
 
 class CmdShowAttr(Command):
 
@@ -217,11 +223,13 @@ class CmdShowAttr(Command):
         strength = round(caller.db.strength)
         dex = round(caller.db.dex)
         attr_points = caller.db.attr_points
-
         table = evtable.EvTable("Attribute", "Value",
-                table = [["charclass", "defense","health","intel","luck", "magic","dex", "strength", "upgrade points"],
-                [charclass, defense, health, intel, luck, magic, dex, strength, attr_points]])
+                                table=[["charclass", "defense", "health", "intel", "luck",
+                                        "magic", "dex", "strength", "upgrade points"],
+                                       [charclass, defense, health, intel, luck,
+                                        magic, dex, strength, attr_points]])
         caller.msg(table)
+
 
 class CmdCastSpell(Command):
 
@@ -242,9 +250,9 @@ class CmdCastSpell(Command):
         args = self.args
         spell_name, target_list = None, None
         if "on" in args:
-            spell_name, target_list = [part.strip() for part in args.split("on",1)]
+            spell_name, target_list = [part.strip() for part in args.split("on", 1)]
         elif "at" in args:
-            spell_name, target_list = [part.strip() for part in args.split("at",1)]
+            spell_name, target_list = [part.strip() for part in args.split("at", 1)]
         else:
             spell_name = args
         # store, so we can access it below in sie func()
@@ -281,11 +289,12 @@ class CmdSetStance(Command):
             return
         else:
             args = self.args.strip()
-        if args not in ("aggressive","defensive","evasive"):
+        if args not in ("aggressive", "defensive", "evasive"):
             caller.msg(err_msg)
         else:
             caller.db.stance = args
             caller.msg("Your stance has been set to " + args)
+
 
 class CmdDrink(Command):
 
@@ -303,7 +312,7 @@ class CmdDrink(Command):
             caller.msg("Drink what?")
         else:
             args = self.args.strip()
-            item = caller.search(args, nofound_string= args +" doesn't seem to be something you are carrying")
+            item = caller.search(args, nofound_string=args + " doesn't seem to be something you are carrying")
             if item:
                 if item.is_typeclass('typeclasses.objects.Potion'):
                     item.drink(caller)
