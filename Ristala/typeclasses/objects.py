@@ -164,14 +164,17 @@ class Object(DefaultObject):
 
     pass
 
+
 class Weapon(Object):
     damage = 0
     weapon_type = ''
+
     def at_object_creation(self):
         self.db.damage = self.damage
         self.db.weapon_type = self.weapon_type
-    def at_drop(self,dropper):
-        if equipped_check(dropper, "weapon")[0] == True:
+
+    def at_drop(self, dropper):
+        if equipped_check(dropper, "weapon")[0] is True:
             if dropper.db.slots["weapon"] == self:
                 dropper.msg("You throw your equipped weapon on the ground!")
                 dropper.db.slots["weapon"] = None
@@ -179,48 +182,52 @@ class Weapon(Object):
 
 class Armor(Object):
     defense_bonus = 0
+
     def at_object_creation(self):
         self.db.defense_bonus = self.defense_bonus
-    def at_drop(self,dropper):
-        if equipped_check(dropper, "armor")[0] == True:
+
+    def at_drop(self, dropper):
+        if equipped_check(dropper, "armor")[0] is True:
             if dropper.db.slots["armor"] == self:
                 dropper.msg("You throw your equipped armor on the ground!")
                 dropper.db.slots["armor"] = None
 
+
 class Gold(Object):
     """
     Gold objects should be created with the the value followed by the word 'gold'
-    EX: 
-    loot = create_object(
-    	typeclass = 'typeclasses.objects.Gold',
-    	key = '10 gold',
-    	location = self.location)
+    EX:
+    loot = create_object(typeclass = 'typeclasses.objects.Gold',
+                         key = '10 gold',
+                         location = self.location)
     """
-    
+
     def at_object_creation(self):
         gold_string = self.key.split(' ')
         try:
             self.db.value = gold_string[0]
-        except:
+        except Exception:
             self.db.value = 1
-            
+
     def at_get(self, getter):
         getter.db.gold += int(self.db.value)
         self.delete()
-        # rather than keeping the gold in an iinventory we add it to the characters gold attribute and destroy the object
-        
+
+        # rather than keeping the gold in an inventory we add it to the characters gold attribute and destroy the object
+
+
 class Potion(Object):
 
     def at_object_creation(self):
-       self.attributes.add('value', 1)
-       pass
-
+        self.attributes.add('value', 1)
+        pass
 
     def drink(self, caller):
         pot = AttrModHandler(self)
         pot.apply(caller)
         caller.msg("Drinking this affects your " + pot.stat)
         self.delete()
+
 
 class AttrModHandler:
     """
@@ -230,26 +237,26 @@ class AttrModHandler:
     """
 
     desc_to_stat = {
-            "Healing" : "health",
-            "Might" : "strength"
+            "Healing": "health",
+            "Might": "strength"
             }
 
     desc_to_modifier = {
-            "Weak" : 0.1,
+            "Weak": 0.1,
             "Normal": 0.25,
-            "Strong" : 0.5
+            "Strong": 0.5
             }
 
-    def __init__(self,item):
+    def __init__(self, item):
 
         self.item = item
         args = item.key.split(' ')
 
-        for k,v in self.desc_to_stat.items():
+        for k, v in self.desc_to_stat.items():
             if k in args:
                 self.stat = v
 
-        for k,v in self.desc_to_modifier.items():
+        for k, v in self.desc_to_modifier.items():
             if k in args:
                 self.mod = v
 
@@ -259,10 +266,10 @@ class AttrModHandler:
         if self.item.is_typeclass('typeclasses.objects.Potion'):
 
             if self.stat == "health":
-            # Healing potions are special as they should not exceed max_health
+                # Healing potions are special as they should not exceed max_health
                 max_health = caller.db.max_health
                 current_health = caller.db.health
-                newval =  current_health + (max_health * self.mod)
+                newval = current_health + (max_health * self.mod)
                 if newval > max_health:
                     caller.db.health = caller.db.max_health
                 else:

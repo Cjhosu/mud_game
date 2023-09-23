@@ -34,6 +34,7 @@ from evennia import DefaultCharacter
 
     """
 
+
 class Character(DefaultCharacter):
     def at_object_creation(self):
         "This is called when the object is first created only."
@@ -66,19 +67,20 @@ class Character(DefaultCharacter):
         This is overwritten in the default room typeclass so look is always called·
         before an NPC interaction is triggered.
         """
-        #self.execute_cmd('look')
+        # self.execute_cmd('look')
         pass
 
     @interactive
     def at_death(self):
-        self.location.msg_contents(str(self)+ " has lost the will to live")
+        self.location.msg_contents(str(self) + " has lost the will to live")
         yield 3
         self.msg("Re-Spawning you somewhere cozy")
         yield 2
         self.msg("Try to stay alive.")
         yield 2
-        self.move_to(self.home, quiet = True)
+        self.move_to(self.home, quiet=True)
         self.db.health = self.db.max_health
+
 
 class NPC(Character):
 
@@ -89,42 +91,42 @@ class NPC(Character):
     @interactive
     def at_char_entered(self, character):
 
-        #Called only when a character enters a special room typeclass
+        # Called only when a character enters a special room typeclass
         if self.db.hostile:
-            character.location.msg_contents(str(self) +' is giving you some serious side-eye')
+            character.location.msg_contents(str(self) + ' is giving you some serious side-eye')
 
-            #Give the player some time to react
-            yield random.randint(10,20)
+            # Give the player some time to react
+            yield random.randint(10, 20)
 
-            #Attack if both parties are alive
+            # Attack if both parties are alive
             while self.db.health > 0 and character.db.health > 0:
                 self.execute_cmd(f"+attack {character}")
 
-                #Randomize attack timing a bit
-                yield random.randint(10,20)
+                # Randomize attack timing a bit
+                yield random.randint(10, 20)
 
-        #Friendly NPCs just say whats up
+        # Friendly NPCs just say whats up
         else:
             self.execute_cmd(f"say Greetings, {character}!")
 
     @interactive
     def at_death(self):
-    #Enemies dying is a bit different than player characters dying
+        # Enemies dying is a bit different than player characters dying
 
-        self.location.msg_contents(str(self)+ " has lost the will to live")
+        self.location.msg_contents(str(self) + " has lost the will to live")
         number = drop_gold_pieces()
         loot = create_object(
-                typeclass = 'typeclasses.objects.Gold',
-                key = str(number) +' gold',
-                location = self.location)
+                typeclass='typeclasses.objects.Gold',
+                key=str(number) + ' gold',
+                location=self.location)
 
         loot.db.value = number
-        self.location.msg_contents(str(self)+ " dropped " + str(loot))
+        self.location.msg_contents(str(self) + " dropped " + str(loot))
 
         "Take the enemy out of play for 60 seconds"
-        self.move_to(None, to_none = True)
+        self.move_to(None, to_none=True)
         yield 60
 
         "Re-spawn them"
-        self.move_to(self.home, quiet = True)
+        self.move_to(self.home, quiet=True)
         self.db.health = self.db.max_health

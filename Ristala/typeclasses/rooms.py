@@ -4,6 +4,7 @@ Rooms are simple containers that has no location of their own.
 """
 from evennia import DefaultRoom, utils
 
+
 class Room(DefaultRoom):
     """
     Rooms are like any Object, except their location is None
@@ -15,15 +16,18 @@ class Room(DefaultRoom):
     properties and methods available on all Objects.
     """
     def at_object_receive(self, obj, source_location):
-        if not utils.inherits_from(obj, 'typeclasses.characters.NPC') and utils.inherits_from(obj, 'typeclasses.characters.Character'):
-            obj.execute_cmd('look')
+        if not utils.inherits_from(obj, 'typeclasses.characters.NPC'):
+            if utils.inherits_from(obj, 'typeclasses.characters.Character'):
+                obj.execute_cmd('look')
     pass
+
 
 class EnemyRoom(Room):
 
     def at_object_receive(self, obj, source_location):
-        if not utils.inherits_from(obj, 'typeclasses.characters.NPC') and utils.inherits_from(obj, 'typeclasses.characters.Character'):
-            obj.execute_cmd('look')
-            for item in self.contents:
-                if utils.inherits_from(item, 'typeclasses.characters.NPC'):
-                    item.at_char_entered(obj)
+        if not utils.inherits_from(obj, 'typeclasses.characters.NPC'):
+            if utils.inherits_from(obj, 'typeclasses.characters.Character'):
+                obj.execute_cmd('look')
+                for item in self.contents:
+                    if utils.inherits_from(item, 'typeclasses.characters.NPC'):
+                        item.at_char_entered(obj)

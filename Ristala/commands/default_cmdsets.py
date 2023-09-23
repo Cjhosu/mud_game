@@ -15,12 +15,12 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
-from evennia import CmdSet
 from commands import command
 from typeclasses import npcshop
 from evennia.commands.default import building
 from world import storynpcs
 from world.rules import levels
+
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -110,4 +110,3 @@ class SessionCmdSet(default_cmds.SessionCmdSet):
         #
         # any commands you add below will overload the default ones.
         #
-
