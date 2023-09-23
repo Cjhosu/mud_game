@@ -1,4 +1,4 @@
 FROM evennia/evennia:latest
 USER root
 RUN pip install psycopg2-binary
-ENTRYPOINT evennia start --log
+ENTRYPOINT evennia test --settings settings.py world.magic.tests
