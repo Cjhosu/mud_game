@@ -36,6 +36,7 @@ from evennia import DefaultCharacter
 
 
 class Character(DefaultCharacter):
+
     def at_object_creation(self):
         "This is called when the object is first created only."
         self.db.strength = 100

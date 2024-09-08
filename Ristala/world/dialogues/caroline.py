@@ -84,6 +84,7 @@ def Ranger(caller):
     caller.db.dex *= 1.35
     caller.db.intel *= 1.2
     caller.db.luck *= 1.1
+    caller.db.primary_ability = "dex"
     caller.msg("\n I can smell the woods on ya, not in a bad way mind you, just a faint musk!")
     return
 
@@ -93,6 +94,7 @@ def Warrior(caller):
     caller.db.dex *= 1.05
     caller.db.intel *= .60
     caller.db.luck *= 1.1
+    caller.db.primary_ability = "strength"
     caller.msg("\n I should have been able to tell by the muscles!")
     return
 
@@ -104,6 +106,7 @@ def Mage(caller):
     caller.db.luck *= 1.1
     caller.db.mana = 0
     caller.db.max_mana = 100
+    caller.db.primary_ability = "magic"
     caller.msg("\n Spells for days son!")
     return
 
@@ -115,6 +118,7 @@ def Druid(caller):
     caller.db.luck *= .90
     caller.db.mana = 0
     caller.db.max_mana = 70
+    caller.db.primary_ability = "magic"
     caller.msg("\n Ah, Blessed be")
     return
 
@@ -124,6 +128,7 @@ def Rogue(caller):
     caller.db.dex *= 1.35
     caller.db.intel *= .95
     caller.db.luck *= 1.2
+    caller.db.primary_ability = "dex"
     caller.msg("\n That's fine, try not to steal anything.")
     return
 
@@ -133,6 +138,7 @@ def Paladin(caller):
     caller.db.dex *= .85
     caller.db.intel *= .60
     caller.db.luck *= 1.0
+    caller.db.primary_ability = "strength"
     caller.msg("\n I see you follow the righteous path")
     return
 
