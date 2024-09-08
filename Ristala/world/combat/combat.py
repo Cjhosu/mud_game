@@ -5,7 +5,6 @@ import random
 
 
 class CombatHandler():
-    defense_score = {}
     magic_attack_strings = [
             " bends the fabric of the universe to attack ",
             " summons a bolt of eldrich energy attacking ",
