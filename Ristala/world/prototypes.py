@@ -48,9 +48,9 @@ See the `spawn` command and `evennia.prototypes.spawner.spawn` for more info.
 
 """
 
-## example of module-based prototypes using
-## the variable name as `prototype_key` and
-## simple Attributes
+# example of module-based prototypes using
+# the variable name as `prototype_key` and
+# simple Attributes
 
 # from random import randint
 #
