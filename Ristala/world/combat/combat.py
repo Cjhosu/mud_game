@@ -84,9 +84,9 @@ class CombatHandler():
         else:
             bonus = self.proficiency_bonus(weapon, weapon_type, attack_attr)
             attack_score = attr_val + bonus
-        stance = self.caller.db.stance
 
-        # If your stance is set to aggressive you gain a 10% attack advantage pre-all other buffs
+        # If your stance is set to aggressive you gain an additional 10% attack advantage
+        stance = self.caller.db.stance
         if stance == "aggressive":
             attack_score *= (1.1)
         return attack_score
