@@ -167,7 +167,14 @@ class Object(DefaultObject):
 
 class Weapon(Object):
     damage = 0
-    weapon_type = ''
+    weapon_type = None
+    governing_abilities = {
+            "sword": "strength",
+            "battleaxe": "strength",
+            "dagger": "dex",
+            "bow": "dex",
+            "staff": "magic"
+            }
 
     def at_object_creation(self):
         self.db.damage = self.damage
