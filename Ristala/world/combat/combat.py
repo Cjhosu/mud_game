@@ -1,5 +1,5 @@
 from evennia import utils
-from world.helpers import equipped_check, get_num_dice, DiceRoll
+from world.helpers import equipped_check, DiceRoll
 from world.rules.levels import XP
 import random
 
@@ -107,10 +107,12 @@ class CombatHandler():
         defense_score = target.db.defense + defense_bonus
         return defense_score
 
+    # Characters in a defensive or evasive stance can make a DC20 "saving throw" to avoid damage altogether
     def damage_avoided(self, stat):
-        num_dice = get_num_dice(stat) or 1
-        dice = DiceRoll(num_dice, pass_cond=[1])
-        passed = dice.roll()[1]
+        # Rolls are adjusted up or down based on governing stats
+        dice_roll = DiceRoll(stat, pass_dc=20)
+        outcome = dice_roll.roll()
+        passed = outcome[0]
         return passed
 
     def message(self, target, dealt_damage, stance, weapon, weapon_type, passed):
