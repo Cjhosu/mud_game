@@ -11,32 +11,36 @@ class CombatHandler():
             " taps into an unseen well of magic sending a wave of destruction at "
             ]
 
-    # If you have an equipped weapon attack with it...
     def init_combat(self, caller, target):
         weapon = self.get_attack_weapon(caller)
         weapon_type = self.weapon_type(weapon)
         attack_attr = self.get_attack_attribute()
         init_attack_score = self.get_attack_score(weapon, weapon_type, attack_attr)
         attack_score = round(random.uniform(1.0, 1.5) * init_attack_score)
-        if target:
-            if not caller.search(target, location=caller.location):
-                return
-            else:
-                target = self.caller.search(self.target)
-                defense_score = self.get_defense_score(target)
 
-                # What attribute do you use to attack?
-                resolve = self.resolve_attack(defense_score, attack_score, weapon, weapon_type, target)
-                dealt_damage = resolve[0]
-                damage_msg = resolve[1]
-                caller.location.msg_contents(damage_msg)
-                if dealt_damage is not None and dealt_damage > 0:
-                    target.db.health -= dealt_damage
-                if target.db.health <= 0:
-                    target.at_death()
-
-        else:
+        # Attacking without an intended target can give you a sense of how powerful your equipped weapon is
+        if not target:
             self.message(None, attack_score, None, weapon, None, None)
+            return
+
+        # Your target must be in the same location as you
+        if not caller.search(target, location=caller.location):
+            return
+
+        target = self.caller.search(self.target)
+        defense_score = self.get_defense_score(target)
+        resolve = self.resolve_attack(defense_score, attack_score, weapon, weapon_type, target)
+        damage_msg = resolve[1]
+        caller.location.msg_contents(damage_msg)
+
+        # Update HP if needed
+        dealt_damage = resolve[0]
+        if dealt_damage is not None and dealt_damage > 0:
+            target.db.health -= dealt_damage
+
+        # Ya dead?
+        if target.db.health <= 0:
+            target.at_death()
 
     def weapon_is_equipped(self, caller):
         is_equipped = equipped_check(self.caller, "weapon")
@@ -44,7 +48,6 @@ class CombatHandler():
 
     def get_attack_weapon(self, caller):
         if self.weapon_is_equipped(caller):
-            # slots = caller.db.slots
             attack_weapon = caller.db.slots["weapon"]
         else:
             attack_weapon = "your fists"
@@ -52,18 +55,21 @@ class CombatHandler():
 
     def get_attack_attribute(self):
         caller = self.caller
-        # find your favored attribute based on your class
+        # To engage in combat you must have declared a class
         if not caller.db.charclass:
             caller.msg("You should pick a class before you go picking fights! (Talk to Caroline at Shieldmaiden's)")
             return
+
         attack_attr = caller.db.primary_ability
         return attack_attr
 
     def weapon_type(self, weapon):
         if weapon == "your fists":
             return None
+
         if not weapon.db.weapon_type:
             return None
+
         return weapon.db.weapon_type
 
     # Your weapon will do more for you if you know how to use it
@@ -101,7 +107,7 @@ class CombatHandler():
         defense_score = target.db.defense + defense_bonus
         return defense_score
 
-    def _damage_avoided(self, stat):
+    def damage_avoided(self, stat):
         num_dice = get_num_dice(stat) or 1
         dice = DiceRoll(num_dice, pass_cond=[1])
         passed = dice.roll()[1]
@@ -114,14 +120,11 @@ class CombatHandler():
                             " for an attack score of " +
                             str(dealt_damage))
             return
-        if passed:
-            dealt_damage = None
-        if dealt_damage is None and stance == "defensive":
+
+        if passed and stance == "defensive":
             message = str(target) + " blocks and takes no damage!"
-
-        elif dealt_damage is None and stance == "evasive":
+        elif passed and stance == "evasive":
             message = str(target) + " dodges and takes no damage!"
-
         elif weapon and weapon_type and weapon.governing_abilities[weapon_type] == "magic":
             message = (
                            str(self.caller) +
@@ -134,13 +137,11 @@ class CombatHandler():
                 message += " with your " + str(weapon)
             else:
                 message
-
         elif dealt_damage is not None and dealt_damage <= 0:
             message = str(target) + " shrugs off an attack from " + str(self.caller)
         return message
 
     def resolve_attack(self, defense_score, attack_score, weapon, weapon_type, target):
-
         dealt_damage = attack_score - defense_score
 
         # If your stance is evasive or defensive you have a chance to avoid damage
@@ -148,12 +149,12 @@ class CombatHandler():
         passed = False
         if stance == "evasive":
             stat = target.db.dex
-            passed = self._damage_avoided(stat)
+            passed = self.damage_avoided(stat)
         if stance == "defensive":
             stat = target.db.defense
-            passed = self._damage_avoided(stat)
-
+            passed = self.damage_avoided(stat)
+        if passed:
+            dealt_damage = 0
         if dealt_damage is not None and dealt_damage > 0:
             XP(self.caller, 30)
-
         return dealt_damage, self.message(target, dealt_damage, stance, weapon, weapon_type, passed)
